@@ -65,14 +65,13 @@ export default function Navbar() {
             >
               <Package className="w-6 h-6" style={{ color: '#ffffff' }} />
             </div>
-            <span className="hidden sm:inline text-xl font-bold" style={{ color: '#4f46e5' }}>Broly Caps</span>
+            <span className="hidden sm:inline text-xl font-bold" style={{ color: '#4f46e5' }}>Broly Store</span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-6">
             <NavLink href="/" icon={Home} label="Home" />
             <NavLink href="/about" icon={Info} label="About" />
             <NavLink href="/products" icon={Package} label="Products" />
-            <NavLink href="/admin/login" icon={Shield} label="Admin" />
           </div>
 
           <div className="flex items-center gap-3">
@@ -127,8 +126,7 @@ export default function Navbar() {
           <div className="lg:hidden pb-4 space-y-2 animate-fade-in-up">
             <MobileNavLink href="/" icon={Home} label="Home" onClick={() => setIsMobileMenuOpen(false)} />
             <MobileNavLink href="/about" icon={Info} label="About" onClick={() => setIsMobileMenuOpen(false)} />
-            <MobileNavLink href="/products" icon={Package} label="Products" onClick={() => setIsMobileMenuOpen(false)} />
-            <MobileNavLink href="/admin/login" icon={Shield} label="Admin" onClick={() => setIsMobileMenuOpen(false)} />
+            <MobileNavLink href="/products" icon={Package} label="Products" onClick={() => setIsMobileMenuOpen(false)} />            <MobileNavLink href="/admin/login" icon={Shield} label="Admin" onClick={() => setIsMobileMenuOpen(false)} />
             {user ? (
               <MobileNavLink href="/logout" icon={LogOut} label="Logout" onClick={() => setIsMobileMenuOpen(false)} />
             ) : (
