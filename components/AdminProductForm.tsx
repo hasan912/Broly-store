@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProductSchema, ProductFormData } from '@/lib/validation';
 import { Product } from '@/lib/types';
+import { getCategories } from '@/lib/admin-products';
 import { Upload } from 'lucide-react';
 
 interface AdminProductFormProps {
@@ -21,11 +22,17 @@ export default function AdminProductForm({
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(product?.image || '');
   const [error, setError] = useState('');
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>(product?.category || '');
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<ProductFormData>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
@@ -36,6 +43,22 @@ export default function AdminProductForm({
       stock: product?.stock || 0,
     },
   });
+
+  // Fetch categories on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const fetchedCategories = await getCategories();
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -52,6 +75,21 @@ export default function AdminProductForm({
   const handleFormSubmit = async (data: ProductFormData) => {
     setError('');
     try {
+      // If creating new category, use the new category name
+      if (isCreatingNew) {
+        if (!newCategoryName.trim()) {
+          setError('Please enter a category name');
+          return;
+        }
+        data.category = newCategoryName.trim();
+      } else {
+        if (!selectedCategory) {
+          setError('Please select or create a category');
+          return;
+        }
+        data.category = selectedCategory;
+      }
+      
       await onSubmit(data, imageFile || undefined);
     } catch (err: any) {
       setError(err.message || 'Failed to save product');
@@ -172,12 +210,48 @@ export default function AdminProductForm({
         <label className="block text-sm font-medium text-gray-900 mb-2">
           Category
         </label>
-        <input
-          {...register('category')}
-          type="text"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-          placeholder="Enter category"
-        />
+        
+        <div className="space-y-3">
+          {loadingCategories ? (
+            <div className="px-4 py-2 text-gray-500">Loading categories...</div>
+          ) : (
+            <select
+              value={isCreatingNew ? 'CREATE_NEW' : selectedCategory}
+              onChange={(e) => {
+                if (e.target.value === 'CREATE_NEW') {
+                  setIsCreatingNew(true);
+                  setSelectedCategory('');
+                  setNewCategoryName('');
+                } else {
+                  setIsCreatingNew(false);
+                  setSelectedCategory(e.target.value);
+                  setNewCategoryName('');
+                }
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
+            >
+              <option value="">-- Select a Category --</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+              <option value="CREATE_NEW">+ Create New Category</option>
+            </select>
+          )}
+
+          {/* New Category Input */}
+          {isCreatingNew && (
+            <input
+              type="text"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              placeholder="Enter new category name"
+              className="w-full px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-blue-50"
+            />
+          )}
+        </div>
+
         {errors.category && (
           <p className="text-red-600 text-sm mt-1">{errors.category.message}</p>
         )}

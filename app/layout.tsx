@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: 'Broly Caps delivers statement headwear with premium finishes and fast shipping.',
   icons: {
     icon: '/logo.PNG',
-    apple: '/logo.PNG',
+    apple: '/logo.png',
   },
 }
 

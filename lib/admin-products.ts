@@ -5,6 +5,7 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  getDocs,
 } from 'firebase/firestore';
 import { Product } from './types';
 
@@ -79,5 +80,24 @@ export async function deleteProduct(id: string) {
   } catch (error) {
     console.error('Error deleting product:', error);
     throw error;
+  }
+}
+
+export async function getCategories(): Promise<string[]> {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'products'));
+    const categoriesSet = new Set<string>();
+    
+    querySnapshot.forEach((doc) => {
+      const product = doc.data() as Product;
+      if (product.category) {
+        categoriesSet.add(product.category);
+      }
+    });
+    
+    return Array.from(categoriesSet).sort();
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
   }
 }

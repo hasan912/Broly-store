@@ -30,7 +30,7 @@ export default function LoginPage() {
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
               className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center shadow-soft"
             >
-              <Image src="/logo.png" alt="Logo" width={48} height={48} />
+              <Image src="/logo.PNG" alt="Logo" width={48} height={48} />
             </motion.div>
             <span className="text-2xl font-bold text-gradient-primary">
               Broly Store

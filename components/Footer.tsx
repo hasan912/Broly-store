@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center shadow-sm" style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' }}>
-               <Image src="/logo.png" alt="Logo" width={36} height={36} />
+               <Image src="/logo.PNG" alt="Logo" width={36} height={36} />
               </div>
               <span className="text-lg font-bold" style={{ color: '#1c1917' }}>Broly Caps</span>
             </div>

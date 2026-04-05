@@ -63,7 +63,7 @@ export default function Navbar() {
               className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm transition-all duration-300"
               style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' }}
             >
-              <Image src="/logo.png" alt="Logo" width={40} height={40} />
+              <Image src="/logo.PNG" alt="Logo" width={40} height={40} />
             </div>
             <span className="hidden sm:inline text-xl font-bold" style={{ color: '#4f46e5' }}>Broly Store</span>
           </Link>
