@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Mail, Package } from 'lucide-react';
-
+import { Facebook, Twitter, Instagram, Mail, } from 'lucide-react';
+import Image from 'next/image';
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center shadow-sm" style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' }}>
-                <Package className="w-5 h-5" style={{ color: '#ffffff' }} />
+               <Image src="/logo.png" alt="Logo" width={36} height={36} />
               </div>
               <span className="text-lg font-bold" style={{ color: '#1c1917' }}>Broly Caps</span>
             </div>
@@ -24,7 +24,7 @@ export default function Footer() {
               {[Facebook, Twitter, Instagram, Mail].map((Icon, i) => (
                 <a
                   key={i}
-                  href="#"
+                  href="https://www.instagram.com/dripnocap_?igsh=amVxNDNweHY5YTVk&utm_source=qr"
                   className="p-2 rounded-lg transition-all duration-300 hover:scale-105"
                   style={{ backgroundColor: '#e0e7ff', color: '#4f46e5' }}
                   aria-label={`Social link ${i + 1}`}

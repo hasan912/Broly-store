@@ -4,7 +4,7 @@ import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock, ShieldCheck, Sparkles } from 'lucide-react';
 import { loginUser, logoutUser } from '@/lib/auth';
-
+import Image from 'next/image';
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -61,7 +61,7 @@ export default function AdminLoginPage() {
       <div className="relative w-full max-w-md rounded-3xl glass p-8 shadow-elevated-lg border border-amber-300/30">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg">
-            <ShieldCheck className="h-7 w-7" />
+           <Image src="/logo.png" alt="Broly" width={100} height={100} />
           </div>
           <h1 className="text-3xl font-bold text-foreground">Broly Admin Access</h1>
           <p className="text-foreground/70 mt-2 text-sm">

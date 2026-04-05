@@ -174,12 +174,12 @@ export default function HeroSection() {
               className="flex gap-8 py-4"
             >
               <div>
-                <p className="text-3xl font-bold" style={{ color: '#1c1917' }}>50+</p>
+                <p className="text-3xl font-bold" style={{ color: '#1c1917' }}></p>
                 <p className="text-sm" style={{ color: '#78716c' }}>Premium Styles</p>
               </div>
               <div className="w-px" style={{ backgroundColor: '#e7e5e4' }} />
               <div>
-                <p className="text-3xl font-bold" style={{ color: '#1c1917' }}>10k+</p>
+                <p className="text-3xl font-bold" style={{ color: '#1c1917' }}></p>
                 <p className="text-sm" style={{ color: '#78716c' }}>Happy Customers</p>
               </div>
               <div className="w-px" style={{ backgroundColor: '#e7e5e4' }} />

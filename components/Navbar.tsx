@@ -1,5 +1,5 @@
 'use client';
-
+import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import {
@@ -63,7 +63,7 @@ export default function Navbar() {
               className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm transition-all duration-300"
               style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' }}
             >
-              <Package className="w-6 h-6" style={{ color: '#ffffff' }} />
+              <Image src="/logo.png" alt="Logo" width={40} height={40} />
             </div>
             <span className="hidden sm:inline text-xl font-bold" style={{ color: '#4f46e5' }}>Broly Store</span>
           </Link>

@@ -3,9 +3,9 @@
 import { Suspense } from 'react';
 import LoginForm from '@/components/LoginForm';
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+import { Import, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-
+import Image from 'next/image';
 export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card to-background py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -30,7 +30,7 @@ export default function LoginPage() {
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
               className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center shadow-soft"
             >
-              <Sparkles className="w-6 h-6 text-white" />
+              <Image src="/logo.png" alt="Logo" width={48} height={48} />
             </motion.div>
             <span className="text-2xl font-bold text-gradient-primary">
               Broly Store
