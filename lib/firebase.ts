@@ -4,23 +4,15 @@ import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getStorage, connectStorageEmulator } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyDyzYjvjXhs1MPIR5HTkKsLCwWoCJMcoOA",
+  authDomain: "broly-f1eca.firebaseapp.com",
+  databaseURL: "https://broly-f1eca-default-rtdb.firebaseio.com",
+  projectId: "broly-f1eca",
+  storageBucket: "broly-f1eca.firebasestorage.app",
+  messagingSenderId: "1051892697342",
+  appId: "1:1051892697342:web:a7f87bf6a73d0d912e3daf",
+  measurementId: "G-QB23G3JJZP"
 };
-
-// Validate that all required Firebase config values are set
-const requiredKeys = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'appId'] as const;
-for (const key of requiredKeys) {
-  if (!firebaseConfig[key]) {
-    throw new Error(`Missing required Firebase config: ${key}. Please set environment variables.`);
-  }
-}
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
