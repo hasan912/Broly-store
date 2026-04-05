@@ -162,7 +162,7 @@ export default function ProductDetailPage() {
             {/* Price */}
             <div className="mb-6 pb-6 border-b border-border">
               <div className="text-4xl font-bold text-gradient-primary mb-3">
-                ${product.price.toFixed(2)}
+                PKR    {product.price}
               </div>
               <div className="flex items-center gap-2">
                 {product.stock > 0 ? (
