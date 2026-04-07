@@ -41,20 +41,65 @@ export default function OrderConfirmationPage() {
   useEffect(() => {
     async function loadOrder() {
       try {
-        const orderDoc = await getDoc(doc(db, 'orders', orderId));
-        if (orderDoc.exists()) {
-          const orderData = orderDoc.data() as Order;
+        // First check sessionStorage for immediate display (prevents race condition)
+        const cachedOrder = sessionStorage.getItem(`order_${orderId}`);
+        if (cachedOrder) {
+          const orderData = JSON.parse(cachedOrder);
           setOrder({ ...orderData, id: orderId });
-
-          // Load product details
-          const productMap: { [key: string]: Product } = {};
-          for (const item of orderData.items) {
+          
+          // Load product details in parallel
+          const productPromises = orderData.items.map(async (item: { productId: string }) => {
             const product = await getProductById(item.productId);
+            return { productId: item.productId, product };
+          });
+          
+          const productResults = await Promise.all(productPromises);
+          const productMap: { [key: string]: Product } = {};
+          productResults.forEach(({ productId, product }) => {
             if (product) {
-              productMap[item.productId] = product;
+              productMap[productId] = product;
             }
-          }
+          });
           setProducts(productMap);
+          setLoading(false);
+          
+          // Clean up sessionStorage after successful load
+          sessionStorage.removeItem(`order_${orderId}`);
+          return;
+        }
+
+        // Fallback: fetch from Firestore with retry logic
+        let retryCount = 0;
+        const maxRetries = 3;
+        
+        while (retryCount < maxRetries) {
+          const orderDoc = await getDoc(doc(db, 'orders', orderId));
+          if (orderDoc.exists()) {
+            const orderData = orderDoc.data() as Order;
+            setOrder({ ...orderData, id: orderId });
+
+            // Load product details in parallel
+            const productPromises = orderData.items.map(async (item) => {
+              const product = await getProductById(item.productId);
+              return { productId: item.productId, product };
+            });
+            
+            const productResults = await Promise.all(productPromises);
+            const productMap: { [key: string]: Product } = {};
+            productResults.forEach(({ productId, product }) => {
+              if (product) {
+                productMap[productId] = product;
+              }
+            });
+            setProducts(productMap);
+            break;
+          }
+          
+          // Wait before retrying (order might not be replicated yet)
+          retryCount++;
+          if (retryCount < maxRetries) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
         }
       } catch (error) {
         console.error('Error loading order:', error);
@@ -63,7 +108,9 @@ export default function OrderConfirmationPage() {
       }
     }
 
-    loadOrder();
+    if (orderId) {
+      loadOrder();
+    }
   }, [orderId]);
 
   if (loading) {

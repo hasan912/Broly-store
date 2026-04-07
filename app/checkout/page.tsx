@@ -65,6 +65,7 @@ export default function CheckoutPage() {
     try {
       if (!user) {
         setError('Authentication required to finalize acquisition.');
+        setLoading(false);
         return;
       }
 
@@ -80,12 +81,25 @@ export default function CheckoutPage() {
         updatedAt: new Date(),
       });
 
+      // Store order data in sessionStorage for immediate display
+      const orderDataForConfirmation = {
+        id: orderDoc.id,
+        userId: user.uid,
+        items,
+        total,
+        shippingAddress: data,
+        paymentMethod: 'cash_on_delivery',
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      sessionStorage.setItem(`order_${orderDoc.id}`, JSON.stringify(orderDataForConfirmation));
+
       clearCart();
       router.push(`/order-confirmation/${orderDoc.id}`);
     } catch (err) {
       console.error('Error creating order:', err);
       setError('System rejected transaction. Please attempt again.');
-    } finally {
       setLoading(false);
     }
   };
