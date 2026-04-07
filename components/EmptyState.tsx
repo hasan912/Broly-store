@@ -17,28 +17,29 @@ export default function EmptyState({
   icon,
 }: EmptyStateProps) {
   return (
-    <div 
-      className="flex flex-col items-center justify-center py-20 px-4 rounded-2xl shadow-lg p-12"
-      style={{ backgroundColor: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.2)' }}
-    >
+    <div className="flex flex-col items-center justify-center w-full py-24 px-8 border border-[#e8e8e8] bg-[#ffffff] relative overflow-hidden group">
+      <div className="absolute inset-0 bg-linear-to-b from-[#f9f9f9] to-transparent pointer-events-none" />
+      
       {icon && (
-        <div 
-          className="mb-6 p-6 rounded-2xl"
-          style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%)' }}
-        >
+        <div className="mb-10 w-20 h-20 flex items-center justify-center rounded-none bg-[#f3f3f3] border border-[#e8e8e8] relative z-10 transition-all duration-700 group-hover:bg-[#e2e2e2] group-hover:border-[#c6c6c6] group-hover:-translate-y-2">
           {icon}
         </div>
       )}
-      <h2 className="text-3xl font-bold mb-3 text-center" style={{ color: '#1c1917' }}>{title}</h2>
-      <p className="text-center max-w-md mb-8 leading-relaxed" style={{ color: '#57534e' }}>{description}</p>
+      
+      <h2 className="text-2xl md:text-3xl font-serif text-[#000000] mb-4 text-center relative z-10 tracking-wide">
+        {title}
+      </h2>
+      <p className="text-sm font-sans text-[#474747] leading-[1.8] text-center max-w-md mb-10 relative z-10">
+        {description}
+      </p>
+      
       {actionLabel && actionHref && (
         <Link
           href={actionHref}
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
-          style={{ background: 'linear-gradient(to right, #6366f1, #8b5cf6)', color: '#ffffff' }}
+          className="relative z-10 flex items-center gap-3 px-8 py-4 border border-[#000000] text-[#000000] text-xs font-mono uppercase tracking-[0.2em] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#000000] hover:text-[#e5e2e1]"
         >
           {actionLabel}
-          <ArrowRight className="w-5 h-5" />
+          <ArrowRight className="w-4 h-4" />
         </Link>
       )}
     </div>

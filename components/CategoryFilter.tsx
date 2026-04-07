@@ -31,31 +31,36 @@ export default function CategoryFilter({
   }, []);
 
   if (loading) {
-    return <div className="animate-pulse space-y-2">Loading...</div>;
+    return (
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-6 w-full bg-[rgba(255,255,255,0.05)] rounded animate-pulse" />
+        ))}
+      </div>
+    );
   }
 
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm">
-      <h3 className="font-semibold text-gray-900 mb-4">Categories</h3>
-      <div className="space-y-2">
+    <div className="bg-transparent">
+      <div className="space-y-3">
         <button
           onClick={() => onCategoryChange('')}
-          className={`w-full text-left px-3 py-2 rounded transition ${
+          className={`w-full text-left px-4 py-3 border text-xs font-mono uppercase tracking-widest transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             !selectedCategory
-              ? 'bg-blue-100 text-blue-600 font-semibold'
-              : 'text-gray-700 hover:bg-gray-100'
+              ? 'bg-[#000000] text-[#ffffff] border-[#000000]'
+              : 'text-[#474747] bg-[#f9f9f9] border-[#e8e8e8] hover:border-[#c6c6c6] hover:text-[#1a1c1c]'
           }`}
         >
-          All Products
+          Complete Archives
         </button>
         {categories.map((category) => (
           <button
             key={category}
             onClick={() => onCategoryChange(category)}
-            className={`w-full text-left px-3 py-2 rounded transition ${
+            className={`w-full text-left px-4 py-3 border text-xs font-mono uppercase tracking-widest transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               selectedCategory === category
-                ? 'bg-blue-100 text-blue-600 font-semibold'
-                : 'text-gray-700 hover:bg-gray-100'
+                ? 'bg-[#000000] text-[#ffffff] border-[#000000]'
+                : 'text-[#474747] bg-[#f9f9f9] border-[#e8e8e8] hover:border-[#c6c6c6] hover:text-[#1a1c1c]'
             }`}
           >
             {category}

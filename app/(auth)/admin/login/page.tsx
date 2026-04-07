@@ -60,7 +60,7 @@ export default function AdminLoginPage() {
 
       <div className="relative w-full max-w-md rounded-3xl glass p-8 shadow-elevated-lg border border-amber-300/30">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500 to-orange-600 text-white shadow-lg">
            <Image src="/logo.PNG" alt="Broly" width={100} height={100} />
           </div>
           <h1 className="text-3xl font-bold text-foreground">Broly Admin Access</h1>
@@ -103,7 +103,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-3 text-sm font-semibold text-white shadow-elevated transition hover:brightness-110 disabled:opacity-60"
+            className="w-full rounded-xl bg-linear-to-r from-amber-500 to-orange-600 px-4 py-3 text-sm font-semibold text-white shadow-elevated transition hover:brightness-110 disabled:opacity-60"
           >
             {loading ? 'Authorizing...' : 'Unlock Admin Panel'}
           </button>

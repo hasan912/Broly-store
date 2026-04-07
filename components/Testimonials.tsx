@@ -8,23 +8,23 @@ const testimonials = [
   {
     id: 1,
     name: 'Muhammad Hasan Baig',
-    role: 'Streetwear Enthusiast',
+    role: 'Aesthetics Director',
     rating: 5,
-    text: "Best caps I've ever owned. The quality is outstanding and they fit perfectly. I've already ordered three more!",
+    text: "The structural integrity and absolute minimalism in these caps are unmatched. A necessary addition to the modern wardrobe.",
   },
   {
     id: 2,
     name: 'Haider Ali',
-    role: 'Fashion Blogger',
+    role: 'Editorial Curator',
     rating: 5,
-    text: "Broly Caps has become my go-to for headwear. The attention to detail and premium materials really show.",
+    text: "Broly entirely redefines headwear. The attention to material honesty and spatial design is evident in every piece.",
   },
   {
     id: 3,
     name: 'Izhan Ali',
-    role: 'Athlete',
+    role: 'Industrial Designer',
     rating: 5,
-    text: "Perfect for my workouts and casual wear. These caps are breathable, stylish, and incredibly durable.",
+    text: "Form meets function seamlessly. The fabrics breathe, the shape holds, and the aesthetic remains uncompromisingly professional.",
   },
 ];
 
@@ -40,107 +40,107 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="w-full py-20 md:py-28" style={{ backgroundColor: '#ffffff' }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
+    <section className="w-full py-20 md:py-32 bg-transparent relative z-10 border-t border-[rgba(255,255,255,0.05)]">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 relative">
         
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center mb-24"
         >
-          <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style={{ backgroundColor: '#e0e7ff', color: '#4f46e5' }}>
-            Testimonials
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#1c1917' }}>
-            What Our Customers Say
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-px w-8 bg-[#8b7355]" />
+            <span className="text-[10px] uppercase font-mono tracking-[0.2em] text-[#64748b]">
+              Acquisition Logs
+            </span>
+            <div className="h-px w-8 bg-[#8b7355]" />
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#f5f0eb] leading-tight mb-6">
+            Client <span className="italic font-light text-[#94a3b8]">Perspectives.</span>
           </h2>
-          <p className="text-base md:text-lg max-w-2xl mx-auto" style={{ color: '#57534e' }}>
-            Join thousands of satisfied customers who have made Broly Caps their choice.
-          </p>
         </motion.div>
 
         {/* Testimonials Slider */}
         <div className="max-w-3xl mx-auto">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.4 }}
-              className="rounded-2xl p-8 md:p-12 shadow-lg"
-              style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)', border: '2px solid #e7e5e4' }}
-            >
-              {/* Rating */}
-              <div className="flex gap-1 mb-6">
-                {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5" style={{ fill: '#fbbf24', color: '#fbbf24' }} />
-                ))}
-              </div>
-
-              {/* Testimonial Text */}
-              <blockquote className="text-lg md:text-xl leading-relaxed mb-8" style={{ color: '#44403c' }}>
-                &ldquo;{testimonials[currentIndex].text}&rdquo;
-              </blockquote>
-
-              {/* Author */}
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#c7d2fe' }}>
-                  <span className="font-bold text-lg" style={{ color: '#4f46e5' }}>
-                    {testimonials[currentIndex].name.charAt(0)}
-                  </span>
+          <div className="relative">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentIndex}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="rounded-xl p-10 md:p-14 bg-[#0e0e0e] border border-[rgba(255,255,255,0.05)]"
+              >
+                {/* Rating */}
+                <div className="flex gap-2 mb-8">
+                  {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
+                    <div key={i} className="w-2 relative h-2 bg-transparent border border-[#8b7355] rotate-45" />
+                  ))}
                 </div>
-                <div>
-                  <h4 className="font-semibold" style={{ color: '#1c1917' }}>
-                    {testimonials[currentIndex].name}
-                  </h4>
-                  <p className="text-sm" style={{ color: '#78716c' }}>
-                    {testimonials[currentIndex].role}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
 
-          {/* Navigation */}
-          <div className="flex items-center justify-center gap-4 mt-8">
+                {/* Testimonial Text */}
+                <blockquote className="text-xl md:text-2xl font-serif tracking-wide leading-relaxed mb-10 text-[#f5f0eb]">
+                  "{testimonials[currentIndex].text}"
+                </blockquote>
+
+                {/* Top border divider */}
+                <div className="w-12 h-px bg-[rgba(255,255,255,0.1)] mb-6" />
+
+                {/* Author */}
+                <div className="flex items-center gap-4">
+                  <div>
+                    <h4 className="font-sans font-medium text-sm text-[#f5f0eb] mb-1 uppercase tracking-widest">
+                      {testimonials[currentIndex].name}
+                    </h4>
+                    <p className="text-[10px] font-mono tracking-[0.2em] text-[#64748b] uppercase">
+                      {testimonials[currentIndex].role}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Navigation Buttons positioned perfectly on edges */}
             <button
               onClick={prevSlide}
-              className="w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-sm hover:shadow-md"
-              style={{ backgroundColor: '#ffffff', border: '2px solid #e7e5e4', color: '#57534e' }}
-              aria-label="Previous testimonial"
+              className="absolute top-1/2 -left-4 md:-left-6 lg:-left-12 -translate-y-1/2 w-12 h-12 rounded-full border border-[rgba(255,255,255,0.1)] bg-[#050505] flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-[#8b7355] text-[#94a3b8] hover:text-[#f5f0eb] z-20"
+              aria-label="Previous Perspective"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-
-            {/* Dots */}
-            <div className="flex gap-2">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className="h-2.5 rounded-full transition-all duration-300"
-                  style={{ 
-                    backgroundColor: index === currentIndex ? '#4f46e5' : '#d6d3d1',
-                    width: index === currentIndex ? '2rem' : '0.625rem'
-                  }}
-                  aria-label={`Go to testimonial ${index + 1}`}
-                />
-              ))}
-            </div>
-
             <button
               onClick={nextSlide}
-              className="w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-sm hover:shadow-md"
-              style={{ backgroundColor: '#ffffff', border: '2px solid #e7e5e4', color: '#57534e' }}
-              aria-label="Next testimonial"
+              className="absolute top-1/2 -right-4 md:-right-6 lg:-right-12 -translate-y-1/2 w-12 h-12 rounded-full border border-[rgba(255,255,255,0.1)] bg-[#050505] flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-[#8b7355] text-[#94a3b8] hover:text-[#f5f0eb] z-20"
+              aria-label="Next Perspective"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
+
+          {/* Dots Indicator placed below */}
+          <div className="flex items-center justify-center gap-3 mt-10">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                className="group py-2"
+                aria-label={`Go to perspective ${index + 1}`}
+              >
+                <div 
+                  className="h-px transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  style={{ 
+                    backgroundColor: index === currentIndex ? '#8b7355' : 'rgba(255,255,255,0.1)',
+                    width: index === currentIndex ? '3rem' : '1rem'
+                  }}
+                />
+              </button>
+            ))}
+          </div>
+
         </div>
       </div>
     </section>

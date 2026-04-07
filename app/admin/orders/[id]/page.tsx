@@ -150,7 +150,7 @@ export default function OrderDetailPage() {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex-grow">
+                    <div className="grow">
                       <p className="font-semibold text-gray-900">{product.name}</p>
                       <p className="text-sm text-gray-600">
                         Quantity: {item.quantity} × ${product.price.toFixed(2)}

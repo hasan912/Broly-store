@@ -1,102 +1,121 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Shield, Truck, Award, Headphones, Leaf, RefreshCw } from 'lucide-react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { Package, ShieldCheck, Zap } from 'lucide-react';
 
 const features = [
   {
-    icon: Award,
-    title: 'Premium Quality',
-    description: 'Crafted from the finest materials for lasting comfort and durability.',
-    bgColor: '#fef3c7',
-    iconColor: '#d97706',
+    icon: ShieldCheck,
+    title: 'Absolute Integrity',
+    description: 'Every structural unit is mathematically analyzed to guarantee longevity and form preservation before deployment.'
   },
   {
-    icon: Truck,
-    title: 'Free Shipping',
-    description: 'Complimentary delivery on all orders over $50. Fast and reliable.',
-    bgColor: '#d1fae5',
-    iconColor: '#059669',
+    icon: Package,
+    title: 'Zero-G Logistics',
+    description: 'Proprietary packaging designed to suspend the product safely. Complimentary expedited orbital drops globally.'
   },
   {
-    icon: Shield,
-    title: 'Secure Payment',
-    description: 'Your transactions are protected with bank-level security.',
-    bgColor: '#e0e7ff',
-    iconColor: '#4f46e5',
-  },
-  {
-    icon: RefreshCw,
-    title: '30-Day Returns',
-    description: 'Not satisfied? Return within 30 days for a full refund.',
-    bgColor: '#ffe4e6',
-    iconColor: '#e11d48',
-  },
-  {
-    icon: Headphones,
-    title: '24/7 Support',
-    description: 'Our friendly team is here to help you anytime you need.',
-    bgColor: '#f3e8ff',
-    iconColor: '#9333ea',
-  },
-  {
-    icon: Leaf,
-    title: 'Eco-Friendly',
-    description: 'Sustainable practices and materials for a better planet.',
-    bgColor: '#ccfbf1',
-    iconColor: '#0d9488',
-  },
+    icon: Zap,
+    title: 'Direct Linkage',
+    description: 'Bypass standard customer service. Ownership connects you directly to our fabrication engineers for lifecycle support.'
+  }
 ];
+
+function Tilt3DCard({ feature, index }: { feature: any, index: number }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  const Icon = feature.icon;
+
+  return (
+    <div
+      className="relative w-full aspect-square"
+      style={{ perspective: 1200 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <motion.div
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d"
+        }}
+        className="w-full h-full bg-[#ffffff] border border-[#e8e8e8] p-8 md:p-12 shadow-soft hover:shadow-elevated transition-shadow duration-500 cursor-default"
+      >
+        {/* Inner Content that 'pops' out in 3D */}
+        <div style={{ transform: "translateZ(80px)", transformStyle: "preserve-3d" }} className="flex flex-col h-full pointer-events-none justify-between">
+          <div className="w-16 h-16 bg-[#f4f4f4] rounded-full flex shrink-0 items-center justify-center mb-auto">
+            <Icon className="w-6 h-6 text-[#000000]" strokeWidth={1} />
+          </div>
+          <div style={{ transform: "translateZ(40px)" }}>
+            <h3 className="text-2xl font-serif text-[#000000] mb-4">
+              {feature.title}
+            </h3>
+            <p className="text-sm font-sans text-[#5e5e5e] leading-relaxed">
+              {feature.description}
+            </p>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 
 export default function WhyChooseUs() {
   return (
-    <section className="w-full py-20 md:py-28" style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)' }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
-        
-        {/* Section Header */}
+    <section className="w-full py-24 md:py-32 bg-[#f9f9f9] border-b border-[#e8e8e8] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-8">
+
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-20 text-center flex flex-col items-center"
         >
-          <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style={{ backgroundColor: '#e0e7ff', color: '#4f46e5' }}>
-            Why Broly Caps?
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#1c1917' }}>
-            The Broly Difference
+          <h2 className="text-4xl md:text-5xl font-serif text-[#000000] tracking-tight mb-4">
+            Engineered Advantages.
           </h2>
-          <p className="text-base md:text-lg max-w-2xl mx-auto" style={{ color: '#57534e' }}>
-            We&apos;re committed to delivering excellence in every cap and every experience.
+          <p className="text-sm font-sans text-[#5e5e5e] max-w-xl">
+            Every unit is supported by a robust infrastructure designed to eliminate friction and ensure perfection.
           </p>
         </motion.div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {/* 3D Tilt Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 pl-[1px]">
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group"
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 1, delay: index * 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="rounded-2xl p-6 md:p-8 hover:shadow-xl transition-all duration-300" style={{ backgroundColor: '#ffffff', border: '2px solid #e7e5e4' }}>
-                {/* Icon */}
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: feature.bgColor }}>
-                  <feature.icon className="w-7 h-7" style={{ color: feature.iconColor }} />
-                </div>
-
-                {/* Content */}
-                <h3 className="text-xl font-bold mb-3 transition-colors" style={{ color: '#1c1917' }}>
-                  {feature.title}
-                </h3>
-                <p className="leading-relaxed" style={{ color: '#57534e' }}>
-                  {feature.description}
-                </p>
-              </div>
+              <Tilt3DCard feature={feature} index={index} />
             </motion.div>
           ))}
         </div>

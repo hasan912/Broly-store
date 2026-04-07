@@ -24,90 +24,87 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/products/${product.id}`}>
       <div 
-        className="group relative h-full cursor-pointer rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
-        style={{ backgroundColor: '#ffffff', border: '2px solid #e7e5e4' }}
+        className="group relative h-full cursor-pointer flex flex-col bg-[#ffffff]"
       >
         {/* Image Container */}
-        <div className="relative w-full h-72 overflow-hidden" style={{ background: 'linear-gradient(135deg, #f5f5f4 0%, #fafaf9 100%)' }}>
+        <div className="relative w-full aspect-4/5 overflow-hidden bg-[#f4f4f4] mb-4">
           {product.image.startsWith('data:') ? (
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              className="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-[1.5s] ease-[0.16,1,0.3,1]"
             />
           ) : (
             <Image
               src={product.image}
               alt={product.name}
               fill
-              className="object-cover group-hover:scale-110 transition-transform duration-500"
+              className="object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-[1.5s] ease-[0.16,1,0.3,1]"
             />
           )}
 
-          {/* Stock Badge */}
-          {product.stock > 0 && (
-            <div 
-              className="absolute top-4 left-4 px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm"
-              style={{ backgroundColor: '#10b981', color: '#ffffff' }}
-            >
-              In Stock
+          {/* Quick Actions Overlay (Appears on Hover) */}
+          <div className="absolute inset-0 bg-[#000000]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 flex flex-col justify-between p-4">
+            <div className="flex justify-between items-start">
+              {/* Stock Badge */}
+              {product.stock > 0 ? (
+                <span className="text-[10px] font-mono tracking-widest text-[#000000] uppercase bg-[#ffffff] px-2 py-1">
+                  In Stock
+                </span>
+              ) : (
+                <span className="text-[10px] font-mono tracking-widest text-[#ffffff] uppercase bg-[#000000] px-2 py-1">
+                  Sold Out
+                </span>
+              )}
+
+              {/* Favorite Button */}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsFavorite(!isFavorite);
+                }}
+                className="w-8 h-8 flex items-center justify-center bg-[#ffffff] rounded-full hover:scale-110 transition-transform duration-300"
+              >
+                <Heart
+                  className="w-3.5 h-3.5"
+                  style={{ 
+                    fill: isFavorite ? '#000000' : 'transparent',
+                    color: '#000000'
+                  }}
+                  strokeWidth={isFavorite ? 0 : 1.5}
+                />
+              </button>
             </div>
-          )}
 
-          {/* Favorite Button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setIsFavorite(!isFavorite);
-            }}
-            className="absolute top-4 right-4 p-2.5 rounded-full backdrop-blur-sm transition-all duration-300 shadow-sm hover:shadow-md"
-            style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}
-          >
-            <Heart
-              className="w-5 h-5 transition-all duration-300"
-              style={{ 
-                fill: isFavorite ? '#ef4444' : 'transparent',
-                color: isFavorite ? '#ef4444' : '#a8a29e'
-              }}
-            />
-          </button>
-        </div>
-
-        {/* Content Container */}
-        <div className="p-5 flex flex-col">
-          {/* Category */}
-          <p className="text-xs font-medium uppercase tracking-wider mb-2" style={{ color: '#78716c' }}>
-            {product.description}
-          </p>
-
-          {/* Title */}
-          <h3 className="font-bold text-lg mb-3 line-clamp-2 transition-colors" style={{ color: '#1c1917' }}>
-            {product.name}
-          </h3>
-
-          {/* Price & Button Row */}
-          <div className="flex items-center justify-between mt-auto">
-            {/* Price */}
-            <span className="text-2xl font-bold" style={{ color: '#4f46e5' }}>
-              ${product.price.toFixed(2)}
-            </span>
-
-            {/* Add to Cart Button */}
+            {/* Quick Add Button */}
             {product.stock > 0 && (
               <button
                 onClick={handleAddToCart}
-                className="p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
-                style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#ffffff' }}
-                title="Add to cart"
+                className="w-full translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 bg-[#000000] text-[#ffffff] py-3 text-[10px] font-mono tracking-[0.2em] uppercase flex items-center justify-center gap-2 hover:bg-[#222222]"
               >
-                <ShoppingCart className="w-5 h-5" />
+                <ShoppingCart className="w-3.5 h-3.5" strokeWidth={1.5} />
+                Acquire
               </button>
             )}
+          </div>
+        </div>
 
-            {product.stock === 0 && (
-              <span className="text-xs font-semibold uppercase" style={{ color: '#ef4444' }}>Out of Stock</span>
-            )}
+        {/* Content Container */}
+        <div className="flex flex-col flex-grow px-1">
+          <div className="flex flex-col mb-1">
+            <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e8e8e] mb-1.5 line-clamp-1">
+              {product.description || 'Apparel'}
+            </p>
+            <h3 className="font-serif text-lg leading-snug text-[#000000] group-hover:text-[#5e5e5e] transition-colors duration-300 line-clamp-1">
+              {product.name}
+            </h3>
+          </div>
+
+          <div className="mt-auto pt-2">
+            <span className="text-sm font-sans font-medium text-[#000000]">
+              ${product.price.toFixed(2)}
+            </span>
           </div>
         </div>
       </div>

@@ -62,47 +62,52 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div className="min-h-screen bg-[#f9f9f9] text-[#1a1c1c] selection:bg-[#000000] selection:text-white pb-24">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 md:py-24">
+        
         {/* Header */}
-        <div className="mb-12 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4">
-            <Package className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Premium Collection</span>
+        <div className="mb-16">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-px w-8 bg-[#000000]" />
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#000000]">
+              Full Archive
+            </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Our Products</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            Discover our carefully curated collection of premium caps with exceptional quality.
+          <h1 className="text-4xl md:text-6xl font-serif text-[#000000] mb-6">
+            The <span className="italic font-light text-[#5e5e5e]">Collection.</span>
+          </h1>
+          <p className="text-sm md:text-base font-sans text-[#474747] leading-[1.8] max-w-2xl">
+            Examine our entire repository of precision-engineered headwear. Filter by material class or specification.
           </p>
         </div>
 
         {/* Search Bar */}
-        <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+        <div className="mb-12">
+          <div className="relative max-w-2xl">
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5e5e5e]" />
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="SEARCH ARCHIVES..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-card border border-border hover:border-primary/30 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300 shadow-soft"
+              className="w-full h-14 pl-14 pr-4 rounded-none border-b border-[#c6c6c6] bg-transparent text-[#000000] text-xs font-mono tracking-widest transition-all duration-500 focus:outline-none focus:border-[#000000] placeholder:text-[#ababab]"
             />
           </div>
         </div>
 
         {error && (
-          <div className="mb-8 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive animate-fade-in-up">
+          <div className="mb-10 ghost-border bg-[#ffdad6]/20 px-6 py-4 text-sm font-mono tracking-wide text-[#ba1a1a]">
             {error}
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
           {/* Sidebar Filters */}
-          <div className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden lg:block'} animate-fade-in-up`} style={{ animationDelay: '0.2s' }}>
-            <div className="p-6 rounded-xl bg-card border border-border/50 shadow-soft sticky top-24">
-              <div className="flex items-center gap-2 mb-6">
-                <SlidersHorizontal className="w-5 h-5 text-primary" />
-                <h2 className="font-semibold text-foreground">Filters</h2>
+          <div className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+            <div className="p-8 bg-[#ffffff] shadow-sm sticky top-32 group border border-transparent hover:border-[#c6c6c6] transition-colors duration-500">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-1.5 h-1.5 bg-[#000000] rounded-none" />
+                <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-[#1a1c1c]">Filters</h2>
               </div>
               <CategoryFilter
                 onCategoryChange={setSelectedCategory}
@@ -113,31 +118,31 @@ export default function ProductsPage() {
 
           {/* Products Grid */}
           <div className="lg:col-span-4">
-            <div className="mb-6 flex items-center justify-between">
-              <p className="text-muted-foreground text-sm">
+            <div className="mb-8 flex items-center justify-between border-b border-[#e8e8e8] pb-4">
+              <p className="text-[10px] font-mono uppercase tracking-widest text-[#5e5e5e]">
                 {filteredProducts.length > 0 && (
-                  <>Showing <span className="font-semibold text-foreground">{filteredProducts.length}</span> product{filteredProducts.length !== 1 ? 's' : ''}</>
+                  <>Displaying <span className="text-[#000000] ml-1">{filteredProducts.length}</span> Unit{filteredProducts.length !== 1 ? 's' : ''}</>
                 )}
               </p>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="lg:hidden px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center gap-2 font-medium"
+                className="lg:hidden px-4 py-2 ghost-border text-xs font-mono uppercase tracking-widest text-[#5e5e5e] hover:text-[#000000] hover:border-[#000000] transition-colors flex items-center gap-2 rounded-none"
               >
-                <SlidersHorizontal className="w-4 h-4" />
-                {showFilters ? 'Hide' : 'Show'} Filters
+                <SlidersHorizontal className="w-3 h-3" />
+                {showFilters ? 'Hide' : 'Configure'}
               </button>
             </div>
 
             {filteredProducts.length === 0 ? (
               <EmptyState
-                title="No Products Found"
-                description="We couldn't find any products matching your search. Try adjusting your filters or search term."
-                actionLabel="Reset Filters"
+                title="No Data Found"
+                description="Our servers couldn't locate units matching those exact architectural parameters."
+                actionLabel="Reset Parameters"
                 actionHref="/products"
-                icon={<Package className="w-16 h-16 text-muted-foreground/30" />}
+                icon={<Package className="w-10 h-10 text-[#c6c6c6]" />}
               />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16">
                 {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}

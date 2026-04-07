@@ -1,35 +1,45 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
-import './globals.css'
-import { RootLayoutClient } from '@/components/RootLayoutClient'
+import type { Metadata } from 'next';
+import { Inter, Noto_Serif } from 'next/font/google';
+import './globals.css';
+import { CartProvider } from '@/context/CartContext';
+import { Toaster } from 'sonner';
+import Navbar from '@/components/Navbar';
 
-const inter = Inter({ 
-  subsets: ["latin"],
-  display: 'swap',
-  variable: '--font-inter',
-});
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const notoSerif = Noto_Serif({ subsets: ['latin'], weight: ['300', '400', '600'], variable: '--font-serif' });
 
 export const metadata: Metadata = {
-  title: 'Broly Caps - Premium Cap Store',
-  description: 'Broly Caps delivers statement headwear with premium finishes and fast shipping.',
-  icons: {
-    icon: '/logo.PNG',
-    apple: '/logo.png',
-  },
-}
+  title: 'Atelier Monolith | Immersive Headwear',
+  description: 'A revolutionary, immersive 3D gallery for premium e-commerce headwear.',
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased pt-16 md:pt-20 selection:bg-primary/20`}>
-        <RootLayoutClient>{children}</RootLayoutClient>
-        <Analytics />
+    <html lang="en">
+      <body className={`${inter.variable} ${notoSerif.variable} font-sans antialiased bg-background`}>
+        <CartProvider>
+          <Navbar />
+          {/* Main 3D Space & UI Overlays are rendered by children */}
+          <main className="relative w-full h-full min-h-screen">
+            {children}
+          </main>
+          <Toaster 
+            position="bottom-center"
+            toastOptions={{
+              style: {
+                background: '#000000',
+                color: '#e5e2e1',
+                borderRadius: '0px',
+                border: '1px solid rgba(198,198,198,0.15)',
+              },
+            }}
+          />
+        </CartProvider>
       </body>
     </html>
-  )
+  );
 }

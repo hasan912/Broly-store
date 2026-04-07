@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RegisterSchema, RegisterFormData } from '@/lib/validation';
 import Link from 'next/link';
-import { Card3D } from '@/components/ui/card-3d';
 import { UserPlus } from 'lucide-react';
 
 export default function RegisterForm() {
@@ -38,11 +37,11 @@ export default function RegisterForm() {
     } catch (err: any) {
       console.error('Registration error:', err);
       if (err.code === 'auth/email-already-in-use') {
-        setError('Email is already registered. Please log in instead.');
+        setError('Designator already in use. Please authorize session instead.');
       } else if (err.code === 'auth/weak-password') {
-        setError('Password is too weak. Please use a stronger password.');
+        setError('Security key insufficient. Increase complexity constraints.');
       } else {
-        setError('Failed to create account. Please try again.');
+        setError('Initialization failed. System error.');
       }
     } finally {
       setLoading(false);
@@ -51,111 +50,111 @@ export default function RegisterForm() {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <Card3D depth="lg" className="glass p-8 md:p-10">
+      <div className="bg-[#ffffff] border border-[#e8e8e8] p-8 shadow-sm rounded-none">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+          <div className="mb-6 p-4 bg-[#ffdad6]/20 border border-[#ba1a1a]/20 text-[#ba1a1a] text-[10px] font-mono tracking-widest uppercase">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Full Name
+            <label className="block text-[10px] font-mono uppercase tracking-widest text-[#474747] mb-2">
+              Full Designation
             </label>
             <input
               {...register('name')}
               type="text"
-              className="w-full px-4 py-3 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-foreground placeholder:text-muted-foreground"
-              placeholder="John Doe"
+              className="w-full px-4 py-3 bg-[#f9f9f9] border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-mono text-xs rounded-none"
+              placeholder="JOHN DOE"
             />
             {errors.name && (
-              <p className="text-red-600 text-sm mt-2">{errors.name.message}</p>
+              <p className="text-[#ba1a1a] text-[10px] font-mono tracking-widest uppercase mt-2">{errors.name.message}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Email Address
+            <label className="block text-[10px] font-mono uppercase tracking-widest text-[#474747] mb-2">
+              Comms Contact
             </label>
             <input
               {...register('email')}
               type="email"
-              className="w-full px-4 py-3 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-foreground placeholder:text-muted-foreground"
-              placeholder="you@example.com"
+              className="w-full px-4 py-3 bg-[#f9f9f9] border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-mono text-xs rounded-none"
+              placeholder="CLIENT@ARCHIVE.COM"
             />
             {errors.email && (
-              <p className="text-red-600 text-sm mt-2">{errors.email.message}</p>
+              <p className="text-[#ba1a1a] text-[10px] font-mono tracking-widest uppercase mt-2">{errors.email.message}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Password
+            <label className="block text-[10px] font-mono uppercase tracking-widest text-[#474747] mb-2">
+              Security Key
             </label>
             <input
               {...register('password')}
               type="password"
-              className="w-full px-4 py-3 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-foreground placeholder:text-muted-foreground"
+              className="w-full px-4 py-3 bg-[#f9f9f9] border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-mono text-xs rounded-none"
               placeholder="••••••••"
             />
             {errors.password && (
-              <p className="text-red-600 text-sm mt-2">{errors.password.message}</p>
+              <p className="text-[#ba1a1a] text-[10px] font-mono tracking-widest uppercase mt-2">{errors.password.message}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Confirm Password
+            <label className="block text-[10px] font-mono uppercase tracking-widest text-[#474747] mb-2">
+              Verify Security Key
             </label>
             <input
               {...register('confirmPassword')}
               type="password"
-              className="w-full px-4 py-3 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-foreground placeholder:text-muted-foreground"
+              className="w-full px-4 py-3 bg-[#f9f9f9] border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-mono text-xs rounded-none"
               placeholder="••••••••"
             />
             {errors.confirmPassword && (
-              <p className="text-red-600 text-sm mt-2">{errors.confirmPassword.message}</p>
+              <p className="text-[#ba1a1a] text-[10px] font-mono tracking-widest uppercase mt-2">{errors.confirmPassword.message}</p>
             )}
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-primary text-white py-3.5 rounded-xl hover:shadow-elevated transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed depth-interactive flex items-center justify-center gap-2"
+            className="w-full bg-[#000000] text-[#ffffff] py-4 hover:bg-[#5e5e5e] transition-all duration-300 text-[10px] uppercase font-mono tracking-widest disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-none"
           >
             {loading ? (
               <>
-                <div className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                Creating account...
+                <div className="w-3 h-3 border border-[#ffffff]/30 border-t-[#ffffff] animate-spin rounded-none" />
+                INITIALIZING...
               </>
             ) : (
               <>
-                <UserPlus className="w-5 h-5" />
-                Create Account
+                <UserPlus className="w-3 h-3" />
+                CONFIRM PROFILE
               </>
             )}
           </button>
         </form>
 
-        <div className="mt-8 text-center">
-          <p className="text-muted-foreground text-sm">
-            Already have an account?{' '}
-            <Link href={`/login?redirect=${encodeURIComponent(redirectUrl)}`} className="text-primary font-semibold hover:underline transition-colors">
-              Sign in
+        <div className="mt-8 text-center border-t border-[#e8e8e8] pt-6">
+          <p className="text-[#5e5e5e] text-[10px] font-mono uppercase tracking-widest">
+            Profile active?{' '}
+            <Link href={`/login?redirect=${encodeURIComponent(redirectUrl)}`} className="text-[#000000] font-semibold hover:border-b hover:border-[#000000] transition-all">
+              Initialize Session
             </Link>
           </p>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-border">
+        <div className="mt-6 pt-6 border-t border-[#e8e8e8]">
           <Link
             href="/"
-            className="block text-center text-muted-foreground hover:text-foreground transition-colors text-sm"
+            className="block text-center text-[#5e5e5e] hover:text-[#000000] transition-colors text-[10px] font-mono uppercase tracking-widest"
           >
-            Continue as Guest
+            Bypass Authentication
           </Link>
         </div>
-      </Card3D>
+      </div>
     </div>
   );
 }

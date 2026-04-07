@@ -1,131 +1,89 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { getCategories, getProducts } from '@/lib/products';
+import Image from 'next/image';
+import { useRef } from 'react';
 
-interface Category {
-  name: string;
-  image: string;
-  bgColor: string;
-  count: number;
-}
+const categories = [
+  { name: 'Core Architecture', id: 'core', image: '/Hero1.jpeg' },
+  { name: 'Structural Beanies', id: 'beanies', image: '/Hero2.jpeg' },
+];
 
 export default function CategoriesSection() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const containerRef = useRef(null);
 
-  const bgColors = [
-    '#eef2ff', // indigo-50
-    '#fffbeb', // amber-50
-    '#ecfdf5', // emerald-50
-    '#fff1f2', // rose-50
-    '#eff6ff', // blue-50
-    '#faf5ff', // purple-50
-    '#f0fdfa', // teal-50
-    '#fdf2f8'  // pink-50
-  ];
+  // Create a scroll-based parallax effect
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const categoryNames = await getCategories();
-        const allProducts = await getProducts();
+  // Different elements move at different speeds
+  const y1 = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [-50, 150]);
+  const scaleImage = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-        const categoriesData: Category[] = categoryNames.map((categoryName, index) => {
-          const productCount = allProducts.filter((p) => p.category === categoryName).length;
-          const product = allProducts.find((p) => p.category === categoryName);
-
-          return {
-            name: categoryName,
-            image: product?.image || '/ai-caps/cap-01.svg',
-            bgColor: bgColors[index % bgColors.length] || '#ffffff',
-            count: productCount,
-          };
-        });
-
-        setCategories(categoriesData);
-      } catch (err) {
-        setError('Failed to load categories');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  if (error || (categories.length === 0 && !loading)) {
-    return null;
-  }
   return (
-    <section className="w-full py-20 md:py-28" style={{ backgroundColor: '#ffffff' }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
-        
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style={{ backgroundColor: '#e0e7ff', color: '#4f46e5' }}>
-            Shop by Category
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#1c1917' }}>
-            Find Your Perfect Fit
+    <section ref={containerRef} className="w-full py-32 md:py-48 bg-[#ffffff] border-b border-[#e8e8e8] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-8 relative">
+
+        {/* Background Typography */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none z-0">
+          <h2 className="text-[10vw] font-serif text-[#f3f3f3] leading-none whitespace-nowrap">
+            SECTORS
           </h2>
-          <p className="text-base md:text-lg max-w-2xl mx-auto" style={{ color: '#57534e' }}>
-            Browse through our carefully curated categories and discover the cap that matches your vibe.
-          </p>
-        </motion.div>
+        </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map((category, index) => (
-            <motion.div
-              key={category.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Link href={`/products?category=${category.name}`} className="block group">
-                <div className="rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300" style={{ backgroundColor: category.bgColor, border: '2px solid #e7e5e4' }}>
-                  
-                  {/* Cap Image */}
-                  <div className="w-full h-64 flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(to bottom, #fafaf9, #f5f5f4)' }}>
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-8 items-center relative z-10">
 
-                  {/* Category Info */}
-                  <div className="p-6" style={{ backgroundColor: '#ffffff' }}>
-                    <h3 className="text-xl font-bold mb-3 transition-colors" style={{ color: '#1c1917' }}>
-                      {category.name}
-                    </h3>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs px-3 py-1 rounded-full font-medium" style={{ backgroundColor: '#f5f5f4', color: '#57534e' }}>
-                        {category.count} {category.count === 1 ? 'item' : 'items'}
-                      </span>
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300" style={{ backgroundColor: '#4f46e5', color: '#ffffff' }}>
-                        <ArrowRight className="w-4 h-4" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+          {/* Category 1 - Moves Upwards */}
+          <motion.div style={{ y: y1 }} className="flex flex-col items-center md:items-start">
+            <Link href={`/products?category=${categories[0].id}`} className="group relative block w-full max-w-md aspect-[3/4]">
+              <div className="absolute inset-0 bg-[#e8e8e8] -translate-x-4 translate-y-4 border border-[#000000] transition-transform duration-500 group-hover:translate-x-0 group-hover:translate-y-0" />
+              <div className="relative w-full h-full overflow-hidden border border-[#000000] bg-[#ffffff]">
+                <motion.div style={{ scale: scaleImage }} className="w-full h-full origin-center">
+                  <Image
+                    src={categories[0].image}
+                    alt={categories[0].name}
+                    fill
+                    className="object-cover mix-blend-multiply grayscale group-hover:grayscale-0 transition-all duration-700"
+                  />
+                </motion.div>
+              </div>
+
+              {/* Floating Label */}
+              <div className="absolute -bottom-6 -right-6 bg-[#000000] text-[#ffffff] px-6 py-4 z-20 group-hover:-translate-y-2 transition-transform duration-500">
+                <h3 className="text-xl font-serif">{categories[0].name}</h3>
+                <div className="text-[9px] font-mono tracking-widest uppercase mt-1 opacity-70">Access Matrix</div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* Category 2 - Moves Downwards (Offset) */}
+          <motion.div style={{ y: y2 }} className="flex flex-col items-center md:items-end mt-16 md:mt-32">
+            <Link href={`/products?category=${categories[1].id}`} className="group relative block w-full max-w-sm aspect-square">
+              {/* Shadow Box */}
+              <div className="absolute inset-0 bg-[#e8e8e8] translate-x-4 -translate-y-4 border border-[#000000] transition-transform duration-500 group-hover:translate-x-0 group-hover:translate-y-0" />
+              <div className="relative w-full h-full overflow-hidden border border-[#000000] bg-[#ffffff]">
+                <motion.div style={{ scale: scaleImage }} className="w-full h-full origin-center">
+                  <Image
+                    src={categories[1].image}
+                    alt={categories[1].name}
+                    fill
+                    className="object-cover mix-blend-multiply grayscale group-hover:grayscale-0 transition-all duration-700"
+                  />
+                </motion.div>
+              </div>
+
+              {/* Floating Label */}
+              <div className="absolute top-12 -left-8 bg-[#ffffff] border border-[#000000] text-[#000000] px-6 py-4 z-20 group-hover:translate-x-2 transition-transform duration-500 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                <h3 className="text-xl font-serif">{categories[1].name}</h3>
+                <div className="text-[9px] font-mono tracking-widest uppercase mt-1 text-[#5e5e5e]">Access Matrix</div>
+              </div>
+            </Link>
+          </motion.div>
+
         </div>
       </div>
     </section>

@@ -14,77 +14,71 @@ export default function CartSummary({ showCheckoutButton = true }: CartSummaryPr
   const finalTotal = total + shippingCost;
 
   return (
-    <div className="rounded-2xl glass shadow-elevated sticky top-24 overflow-hidden">
+    <div className="rounded-none border border-[#e8e8e8] bg-[#ffffff] sticky top-32 group hover:border-[#c6c6c6] transition-colors duration-500 overflow-hidden shadow-sm flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-white/20">
-        <h2 className="text-xl font-bold text-foreground">Order Summary</h2>
+      <div className="p-8 border-b border-[#e8e8e8]">
+        <h2 className="text-sm font-serif text-[#000000] tracking-wide uppercase">Financial Summary</h2>
       </div>
 
       {/* Summary Details */}
-      <div className="p-6 space-y-4 border-b border-white/20">
-        <div className="flex justify-between text-sm">
-          <span className="text-foreground/70">Subtotal ({items.length} {items.length === 1 ? 'item' : 'items'})</span>
-          <span className="font-semibold text-foreground">${total.toFixed(2)}</span>
+      <div className="p-8 space-y-6 border-b border-[#e8e8e8] text-xs font-mono tracking-widest text-[#474747] uppercase">
+        <div className="flex justify-between items-center">
+          <span className="text-[#474747]">Subtotal ({items.length} {items.length === 1 ? 'UNIT' : 'UNITS'})</span>
+          <span className="text-[#000000]">${total.toFixed(2)}</span>
         </div>
 
-        <div className="flex justify-between text-sm">
-          <div className="flex items-center gap-2">
-            <span className="text-foreground/70">Shipping</span>
-            <Truck className="w-3 h-3 text-indigo-600" />
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <span className="text-[#474747]">Logistics</span>
+            {shippingCost > 0 && <Truck className="w-3 h-3 text-[#1a1c1c]" />}
           </div>
           <div className="text-right">
             {shippingCost === 0 ? (
-              <span className="text-green-600 font-semibold flex items-center gap-1 justify-end">
+              <span className="text-green-600 flex items-center gap-2 justify-end">
                 <CheckCircle className="w-3 h-3" />
-                FREE
+                COMPLIMENTARY
               </span>
             ) : (
-              <span className="font-semibold text-foreground">${shippingCost.toFixed(2)}</span>
+              <span className="text-[#000000]">${shippingCost.toFixed(2)}</span>
             )}
           </div>
         </div>
-
-        {shippingCost > 0 && (
-          <p className="text-xs text-green-600 font-medium">
-            Free shipping available on orders over $100
-          </p>
-        )}
       </div>
 
       {/* Total */}
-      <div className="p-6 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 border-b border-white/20">
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-lg font-semibold text-foreground">Total Amount</span>
-          <span className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-indigo-700 bg-clip-text text-transparent">
+      <div className="p-8 border-b border-[#e8e8e8] bg-[#f9f9f9]">
+        <div className="flex justify-between items-end">
+          <span className="text-xs font-mono tracking-widest text-[#474747] uppercase">Final Amount</span>
+          <span className="text-3xl font-mono text-[#000000]">
             ${finalTotal.toFixed(2)}
           </span>
         </div>
       </div>
 
       {/* CTA Buttons */}
-      <div className="p-6 space-y-3">
+      <div className="p-8 space-y-4">
         {showCheckoutButton && (
           <Link
             href="/checkout"
-            className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-semibold flex items-center justify-center gap-2 shadow-elevated transition-all duration-300 hover:scale-105 active:scale-98"
+            className="group/btn relative w-full flex items-center justify-between px-6 py-4 border border-[#000000] bg-[#000000] text-[#ffffff] text-[10px] font-mono tracking-widest uppercase transition-all duration-700 hover:bg-transparent hover:text-[#000000]"
           >
-            Proceed to Checkout
-            <ArrowRight className="w-5 h-5" />
+            <span>Proceed to Signature</span>
+            <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover/btn:translate-x-1" />
           </Link>
         )}
 
         <Link
           href="/products"
-          className="w-full px-6 py-4 rounded-xl border-2 border-foreground/20 text-foreground font-semibold flex items-center justify-center gap-2 hover:bg-foreground/5 transition-all duration-300 depth-1"
+          className="w-full flex items-center justify-center px-6 py-4 border border-[#e8e8e8] text-[#5e5e5e] text-[10px] font-mono tracking-widest uppercase transition-all duration-700 hover:border-[#000000] hover:text-[#000000]"
         >
-          Continue Shopping
+          Resume Browsing
         </Link>
       </div>
 
       {/* Security Badge */}
-      <div className="px-6 py-4 bg-white/30 dark:bg-slate-800/30 border-t border-white/20 flex items-center justify-center gap-2 text-xs text-foreground/70">
-        <Lock className="w-3 h-3" />
-        <span>Secure & Encrypted Checkout</span>
+      <div className="px-8 py-6 bg-[#f3f3f3] flex items-center justify-center gap-3 text-[10px] font-mono tracking-widest uppercase text-[#5e5e5e] mt-auto">
+        <Lock className="w-3 h-3 text-[#1a1c1c]" />
+        <span>Hardware Encrypted Tunnel</span>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@
 export function createLazyComponent(Component: any, loadingComponent?: any) {
   return {
     Component,
-    Loading: loadingComponent || (() => <div className="h-screen flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-indigo-200 border-t-indigo-600 animate-spin" /></div>),
+    Loading: loadingComponent || (() => null),
   };
 }
 
@@ -59,9 +59,8 @@ export function useIntersectionObserver(
   return observer;
 }
 
-// Analytics tracking with minimal overhead
 export function trackEvent(name: string, data?: Record<string, any>) {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', name, data);
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', name, data);
   }
 }

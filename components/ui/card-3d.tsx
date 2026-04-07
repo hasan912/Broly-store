@@ -18,7 +18,7 @@ const Card3D = React.forwardRef<HTMLDivElement, Card3DProps>(
       <div
         ref={ref}
         className={cn(
-          "rounded-xl bg-card border border-border/50 p-6 transition-all duration-300",
+          "rounded-none bg-card border border-border/50 p-6 transition-all duration-300",
           depthClasses[depth],
           hover && "card-lift cursor-pointer",
           className

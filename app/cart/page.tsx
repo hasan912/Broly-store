@@ -9,7 +9,6 @@ import Link from 'next/link';
 import { Trash2, ShoppingCart, Plus, Minus, ArrowRight, ChevronLeft } from 'lucide-react';
 import CartSummary from '@/components/CartSummary';
 import EmptyState from '@/components/EmptyState';
-import { Card3D } from '@/components/ui/card-3d';
 import { motion } from 'framer-motion';
 
 export default function CartPage() {
@@ -46,10 +45,10 @@ export default function CartPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-[#f9f9f9]">
         <div className="text-center">
-          <div className="w-16 h-16 rounded-full border-4 border-primary/20 border-t-primary animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading your cart...</p>
+          <div className="w-16 h-16 rounded-none border border-t-[#000000] border-r-transparent border-b-transparent border-l-transparent animate-spin mx-auto mb-6" />
+          <p className="text-[#474747] font-mono text-[10px] tracking-widest uppercase">Processing Data...</p>
         </div>
       </div>
     );
@@ -57,13 +56,13 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-[#f9f9f9]">
         <EmptyState
-          title="Your Cart is Empty"
-          description="Start shopping and add some premium products to your cart."
-          actionLabel="Continue Shopping"
+          title="Empty Cart"
+          description="You have not initiated any acquisitions. Your space is currently void."
+          actionLabel="Access Archives"
           actionHref="/products"
-          icon={<ShoppingCart className="w-16 h-16 text-foreground/20" />}
+          icon={<ShoppingCart className="w-10 h-10 text-[#474747]" />}
         />
       </div>
     );
@@ -73,38 +72,49 @@ export default function CartPage() {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-background"
+      className="min-h-screen bg-[#f9f9f9] text-[#474747] pb-24"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 md:py-24">
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-16"
         >
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6 group"
+            className="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-[#5e5e5e] hover:text-[#000000] transition-colors duration-500 mb-8 group"
           >
-            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Continue Shopping
+            <ChevronLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform duration-500" />
+            Return to Archives
           </Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-gradient-primary mb-3 ">
-            Shopping Cart
+
+          <div className="flex items-center gap-4 mb-4">
+            <div className="h-px w-8 bg-[#000000]" />
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#000000]">
+              Checkout Flow
+            </span>
+          </div>
+
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-serif text-[#000000] mb-4">
+            Pending <span className="italic font-light text-[#5e5e5e]">Acquisitions.</span>
           </h1>
-          <p className="text-lg text-muted-foreground">Review your items and proceed to checkout</p>
+          <p className="text-sm border-l border-[#c6c6c6] pl-4 py-1 text-[#474747] leading-relaxed max-w-lg mt-6">
+            Review your selected elements before finalizing the transaction signature.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Cart Items */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-2 space-y-4"
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-2 space-y-6"
           >
-            <Card3D depth="md" className="p-6 md:p-8 glass-subtle">
+            <div className="p-2 border border-[#e8e8e8] bg-[#ffffff] rounded-none shadow-sm relative">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-[#f9f9f9] blur-2xl pointer-events-none rounded-none" />
               {items.map((item, index) => {
                 const product = products[item.productId];
                 if (!product) return null;
@@ -112,38 +122,38 @@ export default function CartPage() {
                 return (
                   <div
                     key={item.productId}
-                    className={`flex flex-col sm:flex-row gap-6 py-6 ${
-                      index !== items.length - 1 ? 'border-b border-foreground/10' : ''
+                    className={`flex flex-col sm:flex-row gap-6 p-6 ${
+                      index !== items.length - 1 ? 'border-b border-[#e8e8e8]' : ''
                     }`}
                   >
                     {/* Product Image */}
-                    <Link href={`/products/${product.id}`} className="group">
-                      <div className="w-full sm:w-28 h-28 bg-gradient-to-br from-background to-card rounded-xl overflow-hidden flex-shrink-0 shadow-soft hover:shadow-elevated transition-all duration-300 cursor-pointer">
-                        <Image
+                    <Link href={`/products/${product.id}`} className="group relative">
+                      <div className="w-full sm:w-32 h-32 bg-[#f3f3f3] border border-[#e8e8e8] overflow-hidden flex-shrink-0 transition-all duration-700 cursor-pointer flex justify-center items-center">
+                        {/* soft ambient light */}
+                        <div className="absolute top-1/2 left-1/2 w-[60%] h-[60%] -translate-x-1/2 -translate-y-1/2 blur-2xl bg-[rgba(26,28,28,0.02)] pointer-events-none rounded-none" />
+                        <img
                           src={product.image}
                           alt={product.name}
-                          width={112}
-                          height={112}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          className="w-[85%] h-[85%] object-cover mix-blend-multiply group-hover:scale-105 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]"
                         />
                       </div>
                     </Link>
 
                     {/* Product Info */}
-                    <div className="flex-grow flex flex-col justify-between">
+                    <div className="grow flex flex-col justify-between pt-1">
                       <div>
                         <Link
                           href={`/products/${product.id}`}
-                          className="text-lg font-semibold text-foreground hover:text-primary transition-colors"
+                          className="text-lg font-serif tracking-wide text-[#000000] hover:text-[#5e5e5e] transition-colors duration-500"
                         >
                           {product.name}
                         </Link>
-                        <p className="text-muted-foreground text-sm mt-1">{product.category}</p>
+                        <p className="text-[#5e5e5e] text-[10px] font-mono tracking-widest uppercase mt-2">{product.category}</p>
                       </div>
 
-                      <div className="flex items-center gap-3 mt-4">
+                      <div className="flex items-center gap-6 mt-6">
                         {/* Quantity Control */}
-                        <div className="flex items-center gap-2 p-1.5 rounded-lg bg-card border border-border shadow-soft">
+                        <div className="flex items-center gap-1 p-0.5 border border-[#e8e8e8] rounded-none bg-[#f9f9f9]">
                           <button
                             onClick={() =>
                               updateCartItem(
@@ -151,9 +161,9 @@ export default function CartPage() {
                                 Math.max(1, item.quantity - 1)
                               )
                             }
-                            className="p-1.5 rounded-md hover:bg-primary/10 hover:text-primary transition-all depth-interactive"
+                            className="p-2 transition-colors duration-300 hover:text-[#000000]"
                           >
-                            <Minus className="w-4 h-4" />
+                            <Minus className="w-3 h-3" />
                           </button>
                           <input
                             type="number"
@@ -166,7 +176,7 @@ export default function CartPage() {
                                 Math.max(1, parseInt(e.target.value) || 1)
                               )
                             }
-                            className="w-12 text-center bg-transparent font-semibold text-foreground outline-none"
+                            className="w-8 text-center text-xs font-mono tracking-widest bg-transparent text-[#000000] outline-none"
                           />
                           <button
                             onClick={() =>
@@ -175,43 +185,43 @@ export default function CartPage() {
                                 Math.min(product.stock, item.quantity + 1)
                               )
                             }
-                            className="p-1.5 rounded-md hover:bg-primary/10 hover:text-primary transition-all depth-interactive"
+                            className="p-2 transition-colors duration-300 hover:text-[#000000]"
                           >
-                            <Plus className="w-4 h-4" />
+                            <Plus className="w-3 h-3" />
                           </button>
                         </div>
 
                         {/* Remove Button */}
                         <button
                           onClick={() => removeFromCart(item.productId)}
-                          className="px-4 py-2 rounded-lg text-red-600 hover:bg-red-500/10 transition-all depth-interactive flex items-center gap-2 text-sm font-medium"
+                          className="text-[#ba1a1a] hover:text-black transition-colors duration-500 flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest"
                         >
-                          <Trash2 className="w-4 h-4" />
-                          <span className="hidden sm:inline">Remove</span>
+                          <Trash2 className="w-3 h-3" />
+                          <span className="hidden sm:inline pt-0.5">Scrap</span>
                         </button>
                       </div>
                     </div>
 
                     {/* Price */}
-                    <div className="text-right flex-shrink-0 flex flex-col justify-between">
-                      <div className="text-2xl font-bold text-gradient-primary">
+                    <div className="text-right flex-shrink-0 flex flex-col justify-between pt-1">
+                      <div className="text-lg font-mono text-[#000000] tracking-wide">
                         ${(product.price * item.quantity).toFixed(2)}
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        ${product.price.toFixed(2)} each
+                      <p className="text-[10px] uppercase font-mono tracking-widest text-[#5e5e5e]">
+                        ${product.price.toFixed(2)} / UNIT
                       </p>
                     </div>
                   </div>
                 );
               })}
-            </Card3D>
+            </div>
           </motion.div>
 
           {/* Summary */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-1"
           >
             <CartSummary />

@@ -1,12 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingBag } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getProducts } from '@/lib/products';
 import { Product } from '@/lib/types';
+import ProductCard from './ProductCard';
 
 export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -32,27 +32,38 @@ export default function FeaturedProducts() {
   if (error || (products.length === 0 && !loading)) {
     return null;
   }
+
   return (
-    <section className="w-full py-20 md:py-28" style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)' }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
-        
+    <section className="w-full py-24 md:py-32 bg-[#ffffff] border-b border-[#e8e8e8]">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-8">
+
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          className="text-left mb-16 flex flex-col md:flex-row md:items-end justify-between border-b border-[#e8e8e8] pb-10"
         >
-          <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style={{ backgroundColor: '#e0e7ff', color: '#4f46e5' }}>
-            Featured Collection
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#1c1917' }}>
-            Trending This Season
-          </h2>
-          <p className="text-base md:text-lg max-w-2xl mx-auto" style={{ color: '#57534e' }}>
-            Discover our most loved styles, handpicked for quality and design excellence.
-          </p>
+          <div>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-1 h-1 bg-[#000000]" />
+              <span className="text-[10px] uppercase font-mono tracking-widest text-[#5e5e5e]">
+                01 — Curated Matrix
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#000000] leading-none tracking-tight">
+              Featured Units
+            </h2>
+          </div>
+
+          <Link
+            href="/products"
+            className="group inline-flex items-center gap-3 text-[10px] uppercase tracking-widest font-mono text-[#000000] border border-[#e8e8e8] px-6 py-3 transition-colors hover:bg-[#f9f9f9] hover:border-[#000000] mt-8 md:mt-0"
+          >
+            <span>View Directory</span>
+            <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </motion.div>
 
         {/* Products Grid */}
@@ -60,68 +71,16 @@ export default function FeaturedProducts() {
           {products.map((product, index) => (
             <motion.div
               key={product.id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="h-full"
             >
-              <Link href={`/products/${product.id}`} className="block group">
-                <div className="rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300" style={{ backgroundColor: '#ffffff', border: '2px solid #e7e5e4' }}>
-                  
-                  {/* Product Image */}
-                  <div className="w-full h-64 flex items-center justify-center overflow-hidden relative" style={{ backgroundColor: '#f5f5f4' }}>
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-
-                  {/* Product Info */}
-                  <div className="p-4">
-                    {/* Name */}
-                    <h3 className="text-base font-semibold mb-1 line-clamp-1" style={{ color: '#1c1917' }}>
-                      {product.name}
-                    </h3>
-
-                    {/* Category */}
-                    <p className="text-xs mb-3 line-clamp-1" style={{ color: '#78716c' }}>
-                      by {product.category}
-                    </p>
-
-                    {/* Price */}
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="text-lg font-bold" style={{ color: '#1c1917' }}>
-                        ${product.price.toFixed(2)}
-                      </p>
-                      <button className="p-2 rounded-md transition-colors" style={{ backgroundColor: '#e0e7ff', color: '#4f46e5' }}>
-                        <ShoppingBag className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </Link>
+              <ProductCard product={product} />
             </motion.div>
           ))}
         </div>
-
-        {/* View All Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-center mt-16"
-        >
-          <Link
-            href="/products"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-            style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#ffffff' }}
-          >
-            View All Products
-            <ShoppingBag className="w-4 h-4" />
-          </Link>
-        </motion.div>
       </div>
     </section>
   );

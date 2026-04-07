@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -47,11 +47,11 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#f9f9f9]">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-foreground mb-4">Your cart is empty</h1>
-          <Link href="/products" className="text-indigo-600 hover:text-indigo-700 font-semibold">
-            Continue Shopping →
+          <h1 className="text-3xl font-serif text-[#000000] mb-4 tracking-wide">Cart Empty</h1>
+          <Link href="/products" className="text-[10px] font-mono tracking-widest uppercase text-[#5e5e5e] hover:text-[#000000] border-b border-transparent hover:border-[#000000] pb-1 transition-all">
+            Return to Archives
           </Link>
         </div>
       </div>
@@ -64,7 +64,7 @@ export default function CheckoutPage() {
 
     try {
       if (!user) {
-        setError('Please log in to complete your purchase');
+        setError('Authentication required to finalize acquisition.');
         return;
       }
 
@@ -84,7 +84,7 @@ export default function CheckoutPage() {
       router.push(`/order-confirmation/${orderDoc.id}`);
     } catch (err) {
       console.error('Error creating order:', err);
-      setError('Failed to create order. Please try again.');
+      setError('System rejected transaction. Please attempt again.');
     } finally {
       setLoading(false);
     }
@@ -100,42 +100,42 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div className="min-h-screen bg-[#f9f9f9] text-[#1a1c1c]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
         {/* Back Button */}
         <Link
           href="/cart"
-          className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-semibold mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-[10px] font-mono tracking-widest uppercase text-[#5e5e5e] hover:text-[#000000] mb-12 transition-colors group"
         >
-          <ChevronLeft className="w-5 h-5" />
-          Back to Cart
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Back to Selection
         </Link>
 
         {/* Header */}
-        <div className="mb-12 animate-fade-in-up">
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4">Checkout</h1>
-          <p className="text-lg text-foreground/70">Complete your purchase securely</p>
+        <div className="mb-16">
+          <h1 className="text-4xl md:text-5xl font-serif text-[#000000] mb-4">Secure Checkout</h1>
+          <p className="text-sm font-sans text-[#474747]">Process your acquisition safely over encrypted lines.</p>
         </div>
 
         {/* Auth Alert */}
         {!user && (
-          <div className="mb-8 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl text-blue-700 text-sm font-medium">
-            Please <Link href="/login" className="font-bold underline">log in</Link> to complete your purchase.
+          <div className="mb-8 p-4 bg-[#f3f3f3] border border-[#e8e8e8] text-[#1a1c1c] text-xs font-mono uppercase tracking-widest">
+            Please <Link href="/login" className="font-bold border-b border-[#1a1c1c]">log in</Link> to complete your transaction.
           </div>
         )}
 
         {error && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-700 text-sm font-medium">
+          <div className="mb-8 p-4 bg-[#ffdad6]/20 border border-[#ba1a1a]/20 text-[#ba1a1a] text-xs font-mono uppercase tracking-widest">
             {error}
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Checkout Form */}
           <div className="lg:col-span-2">
             {/* Step Indicator */}
-            <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-              <div className="flex items-center justify-between">
+            <div className="mb-16">
+              <div className="flex items-center justify-between px-4 sm:px-12">
                 {STEPS.map((step, index) => {
                   const Icon = step.icon;
                   const isCompleted = currentStep > step.id;
@@ -145,22 +145,22 @@ export default function CheckoutPage() {
                     <div key={step.id} className="flex items-center flex-1">
                       {/* Step Circle */}
                       <div
-                        className={`w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all duration-300 ${
+                        className={`w-10 h-10 rounded-none flex items-center justify-center transition-all duration-500 border ${
                           isActive || isCompleted
-                            ? 'bg-linear-to-r from-indigo-600 to-indigo-700 text-white shadow-elevated'
-                            : 'bg-slate-200 dark:bg-slate-700 text-foreground/50'
+                            ? 'bg-[#000000] text-[#ffffff] border-[#000000]'
+                            : 'bg-[#ffffff] text-[#c6c6c6] border-[#e8e8e8]'
                         }`}
                       >
                         {isCompleted ? (
-                          <Check className="w-6 h-6" />
+                          <Check className="w-4 h-4" />
                         ) : (
-                          <Icon className="w-6 h-6" />
+                          <Icon className="w-4 h-4" />
                         )}
                       </div>
 
                       {/* Step Label */}
-                      <div className="ml-3">
-                        <p className={`font-semibold ${isActive ? 'text-indigo-600' : isCompleted ? 'text-foreground' : 'text-foreground/50'}`}>
+                      <div className="ml-4">
+                        <p className={`text-[10px] font-mono tracking-widest uppercase ${isActive ? 'text-[#000000]' : isCompleted ? 'text-[#000000]' : 'text-[#c6c6c6]'}`}>
                           {step.name}
                         </p>
                       </div>
@@ -168,8 +168,8 @@ export default function CheckoutPage() {
                       {/* Connector Line */}
                       {index < STEPS.length - 1 && (
                         <div
-                          className={`flex-1 h-1 mx-4 rounded-full transition-all duration-300 ${
-                            isCompleted ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-slate-700'
+                          className={`flex-1 h-px mx-6 transition-all duration-500 ${
+                            isCompleted ? 'bg-[#000000]' : 'bg-[#e8e8e8]'
                           }`}
                         />
                       )}
@@ -182,102 +182,102 @@ export default function CheckoutPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               {/* Step 1: Shipping Information */}
               {currentStep === 1 && (
-                <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                  <div className="rounded-2xl glass shadow-soft p-8">
-                    <h2 className="text-2xl font-bold text-foreground mb-8">Shipping Address</h2>
+                <div>
+                  <div className="bg-[#ffffff] border border-[#e8e8e8] shadow-sm p-8 md:p-12">
+                    <h2 className="text-xl font-serif text-[#000000] mb-8 pb-4 border-b border-[#e8e8e8]">Logistics Target</h2>
 
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                       <div>
-                        <label className="block text-sm font-semibold text-foreground mb-2">Full Name *</label>
+                        <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Primary Designator *</label>
                         <input
                           {...register('fullName')}
                           type="text"
-                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white focus:border-indigo-500 focus:outline-none transition-colors"
+                          className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
                           placeholder="John Doe"
                         />
-                        {errors.fullName && <p className="text-red-600 text-sm mt-2">{errors.fullName.message}</p>}
+                        {errors.fullName && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.fullName.message}</p>}
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         <div>
-                          <label className="block text-sm font-semibold text-foreground mb-2">Email *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Comms Channel (Email) *</label>
                           <input
                             {...register('email')}
                             type="email"
-                            className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white focus:border-indigo-500 focus:outline-none transition-colors"
-                            placeholder="john@example.com"
+                            className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
+                            placeholder="entity@domain.com"
                           />
-                          {errors.email && <p className="text-red-600 text-sm mt-2">{errors.email.message}</p>}
+                          {errors.email && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.email.message}</p>}
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-foreground mb-2">Phone *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Freq Dial (Phone) *</label>
                           <input
                             {...register('phone')}
                             type="tel"
-                            className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white focus:border-indigo-500 focus:outline-none transition-colors"
+                            className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
                             placeholder="+1 (555) 123-4567"
                           />
-                          {errors.phone && <p className="text-red-600 text-sm mt-2">{errors.phone.message}</p>}
+                          {errors.phone && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.phone.message}</p>}
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-foreground mb-2">Street Address *</label>
+                        <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Sector Address *</label>
                         <input
                           {...register('street')}
                           type="text"
-                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white focus:border-indigo-500 focus:outline-none transition-colors"
-                          placeholder="123 Main St"
+                          className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
+                          placeholder="123 Main St, Level 4"
                         />
-                        {errors.street && <p className="text-red-600 text-sm mt-2">{errors.street.message}</p>}
+                        {errors.street && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.street.message}</p>}
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         <div>
-                          <label className="block text-sm font-semibold text-foreground mb-2">City *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">City Hub *</label>
                           <input
                             {...register('city')}
                             type="text"
-                            className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white focus:border-indigo-500 focus:outline-none transition-colors"
-                            placeholder="New York"
+                            className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
+                            placeholder="Neo City"
                           />
-                          {errors.city && <p className="text-red-600 text-sm mt-2">{errors.city.message}</p>}
+                          {errors.city && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.city.message}</p>}
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-foreground mb-2">State/Province *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Province / State *</label>
                           <input
                             {...register('state')}
                             type="text"
-                            className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white focus:border-indigo-500 focus:outline-none transition-colors"
+                            className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
                             placeholder="NY"
                           />
-                          {errors.state && <p className="text-red-600 text-sm mt-2">{errors.state.message}</p>}
+                          {errors.state && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.state.message}</p>}
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         <div>
-                          <label className="block text-sm font-semibold text-foreground mb-2">Zip/Postal Code *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Zone Code *</label>
                           <input
                             {...register('zipCode')}
                             type="text"
-                            className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white focus:border-indigo-500 focus:outline-none transition-colors"
+                            className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
                             placeholder="10001"
                           />
-                          {errors.zipCode && <p className="text-red-600 text-sm mt-2">{errors.zipCode.message}</p>}
+                          {errors.zipCode && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.zipCode.message}</p>}
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-foreground mb-2">Country *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Region *</label>
                           <input
                             {...register('country')}
                             type="text"
-                            className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 bg-white focus:border-indigo-500 focus:outline-none transition-colors"
+                            className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
                             placeholder="United States"
                           />
-                          {errors.country && <p className="text-red-600 text-sm mt-2">{errors.country.message}</p>}
+                          {errors.country && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.country.message}</p>}
                         </div>
                       </div>
                     </div>
@@ -287,33 +287,36 @@ export default function CheckoutPage() {
 
               {/* Step 2: Confirmation */}
               {currentStep === 2 && (
-                <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                  <div className="rounded-2xl glass shadow-soft p-8">
-                    <h2 className="text-2xl font-bold text-foreground mb-8">Review Your Order</h2>
-                    <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl mb-4">
-                      <p className="text-amber-700 font-semibold">Payment Method: Cash on Delivery (COD)</p>
-                      <p className="text-sm text-amber-700/80 mt-1">Aap delivery ke waqt cash pay karenge.</p>
+                <div>
+                  <div className="bg-[#ffffff] border border-[#e8e8e8] shadow-sm p-8 md:p-12">
+                    <h2 className="text-xl font-serif text-[#000000] mb-8 pb-4 border-b border-[#e8e8e8]">Confirm Logistics Payload</h2>
+                    
+                    <div className="p-6 bg-[#f3f3f3] border border-[#e8e8e8] mb-6">
+                      <p className="text-[#1a1c1c] text-sm font-semibold font-sans mb-1">Transaction Protocol: Exchange On Delivery (EOD)</p>
+                      <p className="text-xs text-[#5e5e5e] font-sans">Payment will be processed upon physical handover.</p>
                     </div>
-                    <div className="p-6 bg-green-500/10 border border-green-500/30 rounded-xl mb-8">
-                      <p className="text-green-700 font-semibold flex items-center gap-2">
-                        <Check className="w-5 h-5" />
-                        All information entered correctly
+
+                    <div className="p-6 bg-[#d9f9d7]/30 border border-[#40a02b]/30 mb-8">
+                      <p className="text-[#40a02b] text-sm font-semibold flex items-center gap-3 font-sans">
+                        <Check className="w-4 h-4" />
+                        Target variables verified and accurate.
                       </p>
                     </div>
-                    <p className="text-foreground/70">Click "Complete Purchase" to confirm your order.</p>
+                    
+                    <p className="text-[#5e5e5e] text-xs font-mono uppercase tracking-widest text-center mt-8">Provide signature to conclude operation.</p>
                   </div>
                 </div>
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex gap-4 justify-between">
+              <div className="flex gap-4 justify-between mt-8">
                 {currentStep > 1 && (
                   <button
                     type="button"
                     onClick={() => setCurrentStep(currentStep - 1)}
-                    className="px-8 py-4 rounded-xl border-2 border-foreground/20 text-foreground font-semibold hover:bg-foreground/5 transition-colors depth-1"
+                    className="px-8 py-4 border border-[#e8e8e8] text-[#5e5e5e] text-[10px] font-mono tracking-widest uppercase hover:bg-[#f3f3f3] hover:text-[#000000] transition-colors rounded-none"
                   >
-                    Previous
+                    Reverse Process
                   </button>
                 )}
 
@@ -321,17 +324,17 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={handleNextStep}
-                    className="ml-auto px-8 py-4 rounded-xl bg-linear-to-r from-indigo-600 to-indigo-700 text-white font-semibold shadow-elevated transition-all duration-300 hover:scale-105 active:scale-98"
+                    className="ml-auto px-8 py-4 bg-[#000000] text-[#ffffff] text-[10px] font-mono tracking-widest uppercase shadow-sm transition-all duration-300 hover:bg-[#5e5e5e] rounded-none"
                   >
-                    Next Step
+                    Confirm Target
                   </button>
                 ) : (
                   <button
                     type="submit"
                     disabled={loading || !user}
-                    className="ml-auto px-8 py-4 rounded-xl bg-linear-to-r from-indigo-600 to-indigo-700 text-white font-semibold shadow-elevated transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="ml-auto px-8 py-4 bg-[#000000] text-[#ffffff] text-[10px] font-mono tracking-widest uppercase shadow-sm transition-all duration-300 hover:bg-[#5e5e5e] disabled:opacity-50 disabled:cursor-not-allowed rounded-none"
                   >
-                    {loading ? 'Placing Order...' : 'Place Order'}
+                    {loading ? 'Processing...' : 'Authorize Operation'}
                   </button>
                 )}
               </div>
@@ -339,7 +342,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-1 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+          <div className="lg:col-span-1">
             <CartSummary showCheckoutButton={false} />
           </div>
         </div>

@@ -1,79 +1,73 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 
 export default function PromoBanner() {
   return (
-    <section className="w-full py-12 md:py-16 px-6 md:px-12 lg:px-20" style={{ backgroundColor: '#ffffff' }}>
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 rounded-3xl overflow-hidden shadow-2xl">
-          
-          {/* Left Side - Text Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="p-8 md:p-12 lg:p-16 flex flex-col justify-center"
-            style={{ background: 'linear-gradient(135deg, #e8f5f7 0%, #f0e8f5 50%, #fff5e6 100%)' }}
-          >
-            <span className="inline-block w-fit px-4 py-1.5 rounded-full text-sm font-medium mb-6" style={{ backgroundColor: 'rgba(251, 191, 36, 0.2)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
-              Limited Time Offer
-            </span>
+    <section className="relative w-full py-24 md:py-32 bg-[#000000] overflow-hidden">
 
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight" style={{ color: '#1a1a1a' }}>
-              Summer Sale
-              <br />
-              <span style={{ background: 'linear-gradient(90deg, #fbbf24, #f97316)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                Up to 70% off
-              </span>
-            </h2>
-            
-            <p className="text-base md:text-lg mb-8 max-w-md leading-relaxed" style={{ color: 'rgba(0,0,0,0.6)' }}>
-              Don&apos;t miss out on our biggest sale of the season. Premium caps at unbeatable prices.
-            </p>
-
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 w-fit px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-              style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
-            >
-              Shop the Sale
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
-
-          {/* Right Side - Image Section */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative min-h-[300px] lg:min-h-[400px] flex items-center justify-center p-8"
-            style={{ background: 'linear-gradient(135deg, #fff5e6 0%, #ffe8d6 50%, #ffe0f0 100%)' }}
-          >
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="relative w-full h-full"
-            >
-              <Image
-                src="/ai-caps/promo.png"
-                alt="Summer Sale Cap"
-                fill
-                className="object-contain drop-shadow-2xl"
-              />
-            </motion.div>
-            
-            {/* Decorative Elements */}
-            <div className="absolute top-8 right-8 w-16 h-16 rounded-full blur-xl" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }} />
-            <div className="absolute bottom-8 left-8 w-12 h-12 rounded-full blur-xl" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }} />
-          </motion.div>
-        </div>
+      {/* Massive Background Image with Overlay */}
+      <div className="absolute inset-0 w-full h-full">
+        <Image
+          src="/Hero1.jpeg"
+          fill
+          alt="Promo Texture"
+          className="object-cover opacity-40 mix-blend-luminosity scale-105"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-black" />
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-xs" />
       </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center flex flex-col items-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="inline-block border border-white/30 px-6 py-2 mb-8 text-white text-xs tracking-widest uppercase bg-white/5 backdrop-blur-md">
+            VIP Limited Protocol
+          </div>
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="text-5xl md:text-7xl lg:text-[6rem] font-black font-serif text-white uppercase tracking-tighter leading-none mb-8 drop-shadow-2xl"
+        >
+          Unlock 20% <br className="hidden md:block" /> Privileges.
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="text-lg md:text-xl text-gray-300 font-sans max-w-2xl mx-auto mb-12 shadow-black drop-shadow-lg"
+        >
+          Secure your priority access to the global street-archive. Initializing your client profile grants immediate commercial clearance on limited series drops.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <Link
+            href="/register"
+            className="group relative overflow-hidden bg-white text-black px-12 py-5 font-bold uppercase tracking-widest text-sm inline-flex items-center gap-4 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all"
+          >
+            <span className="relative z-10">Access The Vault</span>
+            <div className="absolute inset-0 w-0 bg-gray-200 transition-all duration-500 ease-out group-hover:w-full" />
+          </Link>
+        </motion.div>
+      </div>
+
     </section>
   );
 }

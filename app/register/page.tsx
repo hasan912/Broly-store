@@ -8,11 +8,11 @@ import Link from 'next/link';
 import Image from 'next/image'; 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card to-background py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#f9f9f9] py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse-soft" />
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-[rgba(26,28,28,0.02)] rounded-none blur-3xl animate-pulse-soft" />
+        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[rgba(26,28,28,0.01)] rounded-none blur-3xl animate-pulse-soft" style={{ animationDelay: '1s' }} />
       </div>
 
       <motion.div
@@ -28,20 +28,20 @@ export default function RegisterPage() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center shadow-soft"
+              className="w-12 h-12 flex items-center justify-center"
             >
-              <Image src="/logo.PNG" alt="Logo" width={48} height={48} />
+              <Image src="/logo.PNG" alt="Logo" width={48} height={48} className="mix-blend-multiply opacity-90" />
             </motion.div>
-            <span className="text-2xl font-bold text-gradient-primary">
-              Broly Caps
+            <span className="text-2xl font-serif text-[#1a1c1c] tracking-widest">
+              ATELIER MONOLITH
             </span>
           </Link>
-          <p className="mt-3 text-muted-foreground">Create your account and start shopping</p>
+          <p className="mt-3 text-[10px] font-mono uppercase tracking-widest text-[#474747]">Initialize new client profile.</p>
         </div>
 
         <Suspense fallback={
           <div className="flex justify-center">
-            <div className="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+            <div className="w-12 h-12 border border-[#000000] border-t-transparent animate-spin rounded-none" />
           </div>
         }>
           <RegisterForm />
