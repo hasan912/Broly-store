@@ -1,16 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getOrders } from '@/lib/admin-orders';
+import { deleteOrder, getOrders } from '@/lib/admin-orders';
 import { Order } from '@/lib/types';
 import Link from 'next/link';
-import { Eye, ArrowRight, Clock } from 'lucide-react';
+import { Eye, Clock, Trash2 } from 'lucide-react';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadOrders() {
@@ -37,6 +38,26 @@ export default function AdminOrdersPage() {
     };
     return styles[status] || 'border-border text-muted-foreground';
   };
+
+  async function handleDeleteOrder(orderId: string) {
+    if (!confirm('Are you sure you want to delete this order?')) return;
+
+    setDeletingId(orderId);
+    try {
+      await deleteOrder(orderId);
+      setOrders((prevOrders) => prevOrders.filter((order) => order.id !== orderId));
+    } catch (error: any) {
+      console.error('Error deleting order:', error);
+      const code = error?.code || 'unknown-error';
+      if (code === 'admin-auth-missing' || code === 'permission-denied') {
+        alert(`Delete blocked (${code}). Please logout and login again as admin.`);
+      } else {
+        alert(`Failed to delete order (${code})`);
+      }
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   if (loading) {
     return (
@@ -132,13 +153,23 @@ export default function AdminOrdersPage() {
                     </div>
                   </td>
                   <td className="py-8 pl-4 text-right">
-                    <Link
-                      href={`/admin/orders/${order.id}`}
-                      className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-white border border-border/40 text-primary hover:bg-primary hover:text-white transition-all duration-700 shadow-soft"
-                    >
-                      <span className="text-[10px] font-bold tracking-widest uppercase">Inspect</span>
-                      <Eye className="w-4 h-4 transition-transform group-hover/btn:scale-110" />
-                    </Link>
+                    <div className="flex justify-end gap-3">
+                      <Link
+                        href={`/admin/orders/${order.id}`}
+                        className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-white border border-border/40 text-primary hover:bg-primary hover:text-white transition-all duration-700 shadow-soft"
+                      >
+                        <span className="text-[10px] font-bold tracking-widest uppercase">Inspect</span>
+                        <Eye className="w-4 h-4 transition-transform group-hover/btn:scale-110" />
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteOrder(order.id)}
+                        disabled={deletingId === order.id}
+                        className="p-3 border border-destructive/20 bg-white text-destructive hover:bg-destructive hover:text-white transition-all duration-500 shadow-soft disabled:opacity-50"
+                        title="Delete Order"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

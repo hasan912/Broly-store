@@ -1,13 +1,15 @@
-import { db } from './firebase';
+import { auth, db } from './firebase';
 import {
   collection,
   getDocs,
   doc,
   updateDoc,
+  deleteDoc,
   query,
   orderBy,
 } from 'firebase/firestore';
 import { Order } from './types';
+import { waitForAuthUser } from './auth';
 
 export async function getOrders(): Promise<Order[]> {
   try {
@@ -35,6 +37,26 @@ export async function updateOrderStatus(
     });
   } catch (error) {
     console.error('Error updating order status:', error);
+    throw error;
+  }
+}
+
+export async function deleteOrder(orderId: string): Promise<void> {
+  try {
+    const user = auth.currentUser ?? (await waitForAuthUser());
+
+    if (!user) {
+      const error = new Error('Admin auth session missing. Please login again.') as Error & {
+        code?: string;
+      };
+      error.code = 'admin-auth-missing';
+      throw error;
+    }
+
+    await user.getIdToken(true);
+    await deleteDoc(doc(db, 'orders', orderId));
+  } catch (error) {
+    console.error('Error deleting order:', error);
     throw error;
   }
 }

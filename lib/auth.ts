@@ -2,6 +2,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
   User,
 } from 'firebase/auth';
 import { auth, db } from './firebase';
@@ -55,4 +56,28 @@ export async function getUserData(uid: string) {
   } catch (error) {
     throw error;
   }
+}
+
+export async function waitForAuthUser(timeoutMs = 4000): Promise<User | null> {
+  if (auth.currentUser) {
+    return auth.currentUser;
+  }
+
+  return new Promise((resolve) => {
+    let settled = false;
+    const timeout = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      unsubscribe();
+      resolve(null);
+    }, timeoutMs);
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      unsubscribe();
+      resolve(user);
+    });
+  });
 }

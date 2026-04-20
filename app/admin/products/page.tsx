@@ -36,10 +36,24 @@ export default function AdminProductsPage() {
     setDeletingId(id);
     try {
       await deleteProduct(id);
-      setProducts(products.filter((p) => p.id !== id));
-    } catch (error) {
+      setProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
+    } catch (error: any) {
       console.error('Error deleting product:', error);
-      alert('Failed to delete product');
+      const code = error?.code || 'unknown-error';
+      const message = error?.message || 'No additional details';
+
+      let alertMessage = '';
+      if (code === 'admin-auth-missing') {
+        alertMessage = `Delete blocked.\n\nYour admin session has expired.\n\nPlease logout and login again.`;
+      } else if (code === 'firebase-setup-required') {
+        alertMessage = `Firebase Authentication Setup Required:\n\n${message}\n\nPlease ensure:\n1. A Firebase user exists\n2. Email/Password authentication is enabled in Firebase Console\n3. Restart the app after setup`;
+      } else if (code === 'permission-denied') {
+        alertMessage = `Delete blocked (permission-denied).\n\n${message}`;
+      } else {
+        alertMessage = `Failed to delete product.\n\n${message}`;
+      }
+
+      alert(alertMessage);
     } finally {
       setDeletingId(null);
     }

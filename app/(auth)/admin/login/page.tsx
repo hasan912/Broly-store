@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock, ShieldCheck, Sparkles } from 'lucide-react';
 import Image from 'next/image';
+import { loginUser } from '@/lib/auth';
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -26,14 +27,35 @@ export default function AdminLoginPage() {
       });
 
       if (!response.ok) {
+        await fetch('/api/admin/logout', { method: 'POST' });
         setError('Invalid admin email or password.');
         return;
+      }
+
+      // Best-effort Firebase login for Firestore-protected admin write actions.
+      try {
+        await loginUser(email, password);
+      } catch (firebaseError: any) {
+        const firebaseErrorCode = firebaseError?.code;
+        console.warn('Firebase admin auth unavailable:', firebaseErrorCode || firebaseError);
+        
+        // Provide helpful warning for common Firebase auth issues
+        if (firebaseErrorCode === 'auth/invalid-credential' || firebaseErrorCode === 'auth/user-not-found') {
+          console.warn(
+            'Firebase user not found. To enable product management features, please:\n' +
+            '1. Go to Firebase Console → Authentication → Users\n' +
+            '2. Create a user with this email and password\n' +
+            '3. Or update ADMIN_EMAIL/ADMIN_PASSWORD in .env.local to match an existing Firebase user\n' +
+            'See ADMIN_DELETE_FIX.md for detailed instructions.'
+          );
+        }
       }
 
       const redirectTarget = new URLSearchParams(window.location.search).get('redirect') || '/admin';
       router.replace(redirectTarget);
       router.refresh();
     } catch (err: any) {
+      await fetch('/api/admin/logout', { method: 'POST' });
       setError('Unable to sign in right now. Please try again.');
     } finally {
       setLoading(false);

@@ -230,7 +230,7 @@ export default function CheckoutPage() {
                             {...register('phone')}
                             type="tel"
                             className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
-                            placeholder="+1 (555) 123-4567"
+                            placeholder="+92 300 1234567"
                           />
                           {errors.phone && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.phone.message}</p>}
                         </div>
@@ -254,7 +254,7 @@ export default function CheckoutPage() {
                             {...register('city')}
                             type="text"
                             className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
-                            placeholder="Neo City"
+                            placeholder="City"
                           />
                           {errors.city && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.city.message}</p>}
                         </div>
@@ -265,7 +265,7 @@ export default function CheckoutPage() {
                             {...register('state')}
                             type="text"
                             className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
-                            placeholder="NY"
+                            placeholder="Sindh"
                           />
                           {errors.state && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.state.message}</p>}
                         </div>
@@ -289,7 +289,7 @@ export default function CheckoutPage() {
                             {...register('country')}
                             type="text"
                             className="w-full px-0 py-3 bg-transparent border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-sans text-sm rounded-none"
-                            placeholder="United States"
+                            placeholder="Pakistan"
                           />
                           {errors.country && <p className="text-[#ba1a1a] text-[10px] uppercase font-mono mt-2 tracking-widest">{errors.country.message}</p>}
                         </div>
