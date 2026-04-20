@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
           <div className="mb-12">
             <div className="flex items-center justify-between mb-8">
               <div className="p-3 border border-border bg-muted">
-                <Image src="/logo.png" alt="Stitch" width={48} height={48}  />
+                <Image src="/logo.PNG" alt="Stitch" width={48} height={48}  />
               </div>
               <div className="text-right">
                 <span className="block text-[10px] font-bold tracking-[0.3em] text-muted-foreground uppercase mb-1">Authenticated</span>

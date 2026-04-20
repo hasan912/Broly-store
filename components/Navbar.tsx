@@ -39,7 +39,7 @@ export default function Navbar() {
             <div
               className="w-10 h-10 flex items-center justify-center transition-all duration-800 ease-[cubic-bezier(0.16,1,0.3,1)]"
             >
-              <Image src="/logo.png" alt="Logo" width={32} height={32} className="opacity-90 mix-blend-multiply" />
+              <Image src="/logo.PNG" alt="Logo" width={32} height={32}  />
             </div>
             <span className="hidden sm:inline font-serif text-xl tracking-tighter text-[#1a1c1c]">BROLY STORE</span>
           </Link>
