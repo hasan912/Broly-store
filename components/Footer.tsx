@@ -10,13 +10,13 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="inline-block mb-4">
-              <span className="font-serif text-2xl tracking-tighter text-[#000000]">NO CAPS</span>
+              <span className="font-serif text-2xl tracking-tighter text-[#000000]">BROLY STORE</span>
             </Link>
             <p className="text-[#5e5e5e] text-sm font-sans max-w-xs mb-6">
-              Precision engineered headwear for the exactest physical space.
+              Precision-engineered Broly Store essentials for exacting urban expression.
             </p>
             <div className="text-[10px] font-mono uppercase tracking-widest text-[#000000]">
-              EST. 2026 // MILAN
+              EST. 2026
             </div>
           </div>
 
@@ -54,7 +54,7 @@ export default function Footer() {
         {/* Bottom Tag */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[10px] font-mono uppercase tracking-widest text-[#5e5e5e]">
-            &copy; {new Date().getFullYear()} Atelier Monolith. All rights reserved.
+            &copy; {new Date().getFullYear()} BROLY STORE. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link href="#" className="text-[#5e5e5e] hover:text-[#000000] text-[10px] font-mono tracking-widest uppercase transition-colors">TW / X</Link>

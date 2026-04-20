@@ -44,7 +44,7 @@ export default function HeroSection() {
           </h1>
 
           <p className="text-lg md:text-xl text-gray-200 font-sans max-w-xl leading-relaxed mb-10 shadow-black drop-shadow-md">
-            Step into the modern era of premium headwear. We fuse dynamic street aesthetics with unparalleled luxury craftsmanship.
+            Step into the modern era of Broly Store streetwear. We fuse dynamic street aesthetics with unparalleled luxury craftsmanship.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -52,7 +52,7 @@ export default function HeroSection() {
               Shop Now
             </Link>
             <Link href="/about" className="px-8 py-4 bg-transparent border-2 border-[#ffffff] text-[#ffffff] font-bold uppercase tracking-widest text-sm hover:bg-[#ffffff] hover:text-[#000000] transition-colors shadow-xl">
-              View Lookbook
+              View Our Story
             </Link>
           </div>
         </motion.div>
@@ -74,7 +74,7 @@ export default function HeroSection() {
               <p className="text-white font-bold font-serif text-xl">The Signature</p>
               <p className="text-white/60 text-xs uppercase tracking-widest mt-1">Trending Unit</p>
             </div>
-            <div className="text-white font-bold bg-white/20 px-3 py-1 text-sm">$45.00</div>
+           
           </div>
         </div>
 
@@ -85,7 +85,7 @@ export default function HeroSection() {
           </div>
           <div>
             <p className="text-white text-xs font-bold uppercase tracking-widest">Free Global Logistics</p>
-            <p className="text-white/50 text-[10px] mt-1">On orders exceeding $150</p>
+          
           </div>
         </div>
       </motion.div>

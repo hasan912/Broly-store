@@ -41,7 +41,7 @@ export default function Navbar() {
             >
               <Image src="/logo.PNG" alt="Logo" width={32} height={32} className="opacity-90 mix-blend-multiply" />
             </div>
-            <span className="hidden sm:inline font-serif text-xl tracking-tighter text-[#1a1c1c]">NO CAPS</span>
+            <span className="hidden sm:inline font-serif text-xl tracking-tighter text-[#1a1c1c]">BROLY STORE</span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-12">

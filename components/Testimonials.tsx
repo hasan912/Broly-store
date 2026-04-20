@@ -1,26 +1,35 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { getLatestReviews } from '@/lib/reviews';
 
-const testimonials = [
+type TestimonialItem = {
+  id: string;
+  name: string;
+  role: string;
+  rating: number;
+  text: string;
+};
+
+const fallbackTestimonials: TestimonialItem[] = [
   {
-    id: 1,
+    id: 'fallback-1',
     name: 'Muhammad Hasan Baig',
     role: 'Aesthetics Director',
     rating: 5,
     text: "The structural integrity and absolute minimalism in these caps are unmatched. A necessary addition to the modern wardrobe.",
   },
   {
-    id: 2,
+    id: 'fallback-2',
     name: 'Haider Ali',
     role: 'Editorial Curator',
     rating: 5,
-    text: "Broly entirely redefines headwear. The attention to material honesty and spatial design is evident in every piece.",
+    text: "Broly Store entirely redefines modern streetwear. The attention to material honesty and spatial design is evident in every piece.",
   },
   {
-    id: 3,
+    id: 'fallback-3',
     name: 'Izhan Ali',
     role: 'Industrial Designer',
     rating: 5,
@@ -29,7 +38,42 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
+  const [reviews, setReviews] = useState<TestimonialItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    async function loadReviews() {
+      try {
+        const data = await getLatestReviews(12);
+        const mapped = data.map((review) => ({
+          id: review.id,
+          name: review.name,
+          role: review.productName || 'Verified Buyer',
+          rating: review.rating,
+          text: review.text,
+        }));
+        setReviews(mapped);
+      } catch (error) {
+        console.error('Error loading homepage testimonials:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadReviews();
+  }, []);
+
+  const testimonials = useMemo(
+    () => (reviews.length > 0 ? reviews : fallbackTestimonials),
+    [reviews]
+  );
+
+  useEffect(() => {
+    if (currentIndex > testimonials.length - 1) {
+      setCurrentIndex(0);
+    }
+  }, [currentIndex, testimonials.length]);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
@@ -58,17 +102,22 @@ export default function Testimonials() {
             </span>
             <div className="h-px w-8 bg-[#8b7355]" />
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#f5f0eb] leading-tight mb-6">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#b3b3b3] leading-tight mb-6">
             Client <span className="italic font-light text-[#94a3b8]">Perspectives.</span>
           </h2>
         </motion.div>
 
         {/* Testimonials Slider */}
         <div className="max-w-3xl mx-auto">
+          {loading && (
+            <p className="text-center text-xs font-mono tracking-[0.2em] text-[#64748b] uppercase mb-6">
+              Loading live testimonials...
+            </p>
+          )}
           <div className="relative">
             <AnimatePresence mode="wait">
               <motion.div
-                key={currentIndex}
+                key={testimonials[currentIndex].id}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}

@@ -9,8 +9,8 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const notoSerif = Noto_Serif({ subsets: ['latin'], weight: ['300', '400', '600'], variable: '--font-serif' });
 
 export const metadata: Metadata = {
-  title: 'Atelier Monolith | Immersive Headwear',
-  description: 'A revolutionary, immersive 3D gallery for premium e-commerce headwear.',
+  title: 'Broly Store | Immersive Streetwear',
+  description: 'An immersive 3D gallery experience for Broly Store premium streetwear.',
 };
 
 export default function RootLayout({

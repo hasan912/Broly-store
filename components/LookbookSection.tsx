@@ -61,7 +61,7 @@ export default function LookbookSection() {
             className="max-w-md"
           >
             <p className="text-gray-400 font-sans text-lg leading-relaxed mb-8">
-              Explore our curation of premium headwear in urban and architectural contexts. A dialogue between high-end construction and everyday expression.
+              Explore Broly Store curation in urban and architectural contexts. A dialogue between high-end construction and everyday expression.
             </p>
             <div className="h-[1px] w-24 bg-gray-500" />
           </motion.div>

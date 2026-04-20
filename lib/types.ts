@@ -4,6 +4,7 @@ export interface Product {
   description: string;
   price: number;
   image: string;
+  images?: string[];
   category: string;
   stock: number;
   createdAt: Date;
@@ -45,4 +46,14 @@ export interface Address {
   state: string;
   zipCode: string;
   country: string;
+}
+
+export interface Review {
+  id: string;
+  productId: string;
+  productName: string;
+  name: string;
+  rating: number;
+  text: string;
+  createdAt: Date;
 }

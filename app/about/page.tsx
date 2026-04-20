@@ -41,10 +41,10 @@ export default function About() {
             <div className="h-px w-8 bg-[#000000]" />
           </div>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-[#000000] mb-8 leading-[1.1]">
-            About <span className="italic font-light text-[#5e5e5e]">NO CAPS.</span>
+            About <span className="italic font-light text-[#5e5e5e]">BROLY STORE</span>
           </h1>
           <p className="text-sm md:text-base font-sans text-[#474747] leading-[1.8] max-w-2xl mx-auto">
-            We engineer high-fidelity headwear for individuals who understand that true luxury lies in structural honesty and absolute minimalism.
+            We engineer high-fidelity Broly Store products for individuals who understand that true luxury lies in structural honesty and absolute minimalism.
           </p>
         </div>
       </section>
@@ -57,13 +57,13 @@ export default function About() {
             <h2 className="text-3xl font-serif text-[#000000] mb-8 relative z-10">Our Evolution</h2>
             <div className="space-y-6 text-sm leading-[1.8] text-[#5e5e5e] relative z-10">
               <p>
-                Established with a vision to deconstruct standard headwear, Broly Caps began as a study in spatial geometry—built on the principle that everyday accessories should possess the same structural integrity as modern architecture.
+                Established with a vision to deconstruct standard streetwear, Broly Store began as a study in spatial geometry, built on the principle that everyday accessories should possess the same structural integrity as modern architecture.
               </p>
               <p>
                 What began as a localized project has evolved into a definitive destination for clients who demand the intersection of high-grade materials and industrial design. We analyze seams, tensions, and fabric behaviors to produce pieces that maintain form in any environment.
               </p>
               <p>
-                Today, our studio brings forth curated collections of premium headwear that balance atmospheric minimalism with robust durability. We approach every stitch not simply as a means of joining fabric, but as an architectural decision.
+                Today, our studio brings forth curated Broly Store collections that balance atmospheric minimalism with robust durability. We approach every stitch not simply as a means of joining fabric, but as an architectural decision.
               </p>
             </div>
           </div>
@@ -112,10 +112,10 @@ export default function About() {
               </h2>
               <div className="space-y-6 text-sm text-[#474747] leading-[1.8]">
                 <p>
-                  To engineer premium headwear that translates spatial aesthetics into wearable form, enabling our clients to present a sophisticated, uncompromising silhouette.
+                  To engineer premium Broly Store products that translate spatial aesthetics into wearable form, enabling our clients to present a sophisticated, uncompromising silhouette.
                 </p>
                 <p>
-                  A piece of headwear is not a mere addition; it is the capstone of your visual identity. We dedicate our resources to sourcing zero-compromise materials and applying exact geometric tolerances to every product in the archives.
+                  A Broly Store piece is not a mere addition; it is the capstone of your visual identity. We dedicate our resources to sourcing zero-compromise materials and applying exact geometric tolerances to every product in the archives.
                 </p>
               </div>
             </div>

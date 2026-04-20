@@ -3,14 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { getProductById } from '@/lib/products';
-import { Product } from '@/lib/types';
+import { Product, Review } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { ShoppingCart, Heart, Star, Check, Truck, Shield, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, Heart, Star, Check, Truck, Shield, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card3D } from '@/components/ui/card-3d';
 import { motion } from 'framer-motion';
+import { getProductReviews, submitReview } from '@/lib/reviews';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -20,7 +21,18 @@ export default function ProductDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<'description' | 'reviews'>('description');
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loadingReviews, setLoadingReviews] = useState(true);
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewError, setReviewError] = useState('');
+  const [reviewSuccess, setReviewSuccess] = useState('');
+  const [reviewForm, setReviewForm] = useState({
+    name: '',
+    rating: 5,
+    text: '',
+  });
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -44,6 +56,26 @@ export default function ProductDetailPage() {
     }
 
     loadProduct();
+  }, [productId]);
+
+  useEffect(() => {
+    async function loadReviews() {
+      if (!productId) {
+        setLoadingReviews(false);
+        return;
+      }
+
+      try {
+        const data = await getProductReviews(productId);
+        setReviews(data);
+      } catch (reviewLoadError) {
+        console.error('Error loading reviews:', reviewLoadError);
+      } finally {
+        setLoadingReviews(false);
+      }
+    }
+
+    loadReviews();
   }, [productId]);
 
   if (loading) {
@@ -74,6 +106,67 @@ export default function ProductDetailPage() {
     addToCart(product.id, quantity, product.price);
   };
 
+  const productImages = (
+    product.images && product.images.length > 0 ? product.images : [product.image]
+  ).filter((image): image is string => Boolean(image));
+
+  const currentImage = productImages[selectedImageIndex] || product.image;
+
+  const goToPrevImage = () => {
+    if (productImages.length <= 1) return;
+    setSelectedImageIndex((prev) =>
+      prev === 0 ? productImages.length - 1 : prev - 1
+    );
+  };
+
+  const goToNextImage = () => {
+    if (productImages.length <= 1) return;
+    setSelectedImageIndex((prev) =>
+      prev === productImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const averageRating = reviews.length
+    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+    : 0;
+
+  const roundedRating = Math.round(averageRating);
+
+  const handleReviewSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setReviewError('');
+    setReviewSuccess('');
+
+    const name = reviewForm.name.trim();
+    const text = reviewForm.text.trim();
+
+    if (!name || !text) {
+      setReviewError('Please fill your name and review text.');
+      return;
+    }
+
+    try {
+      setSubmittingReview(true);
+      await submitReview({
+        productId: product.id,
+        productName: product.name,
+        name,
+        rating: reviewForm.rating,
+        text,
+      });
+
+      const updatedReviews = await getProductReviews(product.id);
+      setReviews(updatedReviews);
+      setReviewForm({ name: '', rating: 5, text: '' });
+      setReviewSuccess('Thanks! Your review has been submitted.');
+    } catch (submitError: unknown) {
+      const message = submitError instanceof Error ? submitError.message : 'Failed to submit review';
+      setReviewError(message);
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
   const features = [
     { icon: Truck, text: 'Free shipping on orders over $100' },
     { icon: Shield, text: '30-day money back guarantee' },
@@ -83,7 +176,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Breadcrumb */}
         <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>
@@ -93,7 +186,7 @@ export default function ProductDetailPage() {
           <span className="text-foreground font-medium">{product.name}</span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_0.95fr] gap-8 lg:gap-10 mb-16">
           {/* Image Section */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -101,20 +194,41 @@ export default function ProductDetailPage() {
             transition={{ duration: 0.6 }}
           >
             <Card3D className="overflow-hidden p-0 group" depth="lg">
-              <div className="relative aspect-square bg-linear-to-br from-muted to-secondary">
-                {product.image.startsWith('data:') ? (
+              <div className="relative aspect-[4/3] sm:aspect-square bg-linear-to-br from-muted to-secondary">
+                {currentImage.startsWith('data:') ? (
                   <img
-                    src={product.image}
+                    src={currentImage}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-contain p-2 group-hover:scale-[1.02] transition-transform duration-500"
                   />
                 ) : (
                   <Image
-                    src={product.image}
+                    src={currentImage}
                     alt={product.name}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="object-contain p-2 group-hover:scale-[1.02] transition-transform duration-500"
                   />
+                )}
+
+                {productImages.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={goToPrevImage}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-card/90 border border-border/30 hover:bg-card transition"
+                      aria-label="Previous image"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-foreground" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={goToNextImage}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-card/90 border border-border/30 hover:bg-card transition"
+                      aria-label="Next image"
+                    >
+                      <ChevronRight className="w-4 h-4 text-foreground" />
+                    </button>
+                  </>
                 )}
                 
                 {/* Favorite Badge */}
@@ -130,6 +244,28 @@ export default function ProductDetailPage() {
                 </button>
               </div>
             </Card3D>
+
+            {productImages.length > 1 && (
+              <div className="grid grid-cols-4 gap-3 mt-4">
+                {productImages.slice(0, 4).map((image, index) => (
+                  <button
+                    key={`${image}-${index}`}
+                    type="button"
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`relative aspect-square overflow-hidden rounded-lg border bg-muted/30 transition ${
+                      selectedImageIndex === index ? 'border-primary shadow-soft' : 'border-border hover:border-primary/50'
+                    }`}
+                    aria-label={`View image ${index + 1}`}
+                  >
+                    {image.startsWith('data:') ? (
+                      <img src={image} alt={`${product.name} ${index + 1}`} className="w-full h-full object-contain p-1" />
+                    ) : (
+                      <Image src={image} alt={`${product.name} ${index + 1}`} fill className="object-contain p-1" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </motion.div>
 
           {/* Details Section */}
@@ -153,10 +289,15 @@ export default function ProductDetailPage() {
             <div className="flex items-center gap-3 mb-6">
               <div className="flex gap-1">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-accent text-accent" />
+                  <Star
+                    key={i}
+                    className={`w-5 h-5 ${i < roundedRating ? 'fill-accent text-accent' : 'text-muted-foreground/40'}`}
+                  />
                 ))}
               </div>
-              <span className="text-sm text-muted-foreground">(128 reviews)</span>
+              <span className="text-sm text-muted-foreground">
+                {reviews.length > 0 ? `${averageRating.toFixed(1)} (${reviews.length} reviews)` : 'No reviews yet'}
+              </span>
             </div>
 
             {/* Price */}
@@ -212,7 +353,7 @@ export default function ProductDetailPage() {
 
                 <button
                   onClick={handleAddToCart}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-primary text-white py-4 rounded-lg shadow-soft hover:shadow-elevated transition-all duration-300 font-semibold depth-interactive"
+                  className="w-full border-2 flex items-center justify-center gap-2 border-border text-foreground py-4 rounded-lg hover:bg-secondary transition-all duration-300 font-semibold"
                 >
                   <ShoppingCart className="w-5 h-5" />
                   Add to Cart
@@ -269,20 +410,92 @@ export default function ProductDetailPage() {
             {activeTab === 'description' ? (
               <div className="text-muted-foreground leading-relaxed space-y-4">
                 <p>{product.description}</p>
-                <p>Our premium caps are designed with comfort and style in mind. Each piece is crafted using high-quality materials to ensure durability and long-lasting wear.</p>
+                <p>Our premium designed with comfort and style in mind. Each piece is crafted using high-quality materials to ensure durability.</p>
                 <ul className="space-y-2">
                   <li>Premium fabric construction</li>
-                  <li>Adjustable sizing for perfect fit</li>
                   <li>Breathable and comfortable</li>
                   <li>Modern, versatile design</li>
                 </ul>
               </div>
             ) : (
-              <div className="text-muted-foreground">
-                <p className="mb-4">Customer reviews coming soon. Be the first to share your experience!</p>
-                <button className="px-6 py-3 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors font-medium">
-                  Write a Review
-                </button>
+              <div className="space-y-8">
+                <form onSubmit={handleReviewSubmit} className="space-y-4 rounded-xl border border-border bg-card/50 p-5">
+                  <h3 className="text-foreground font-semibold">Write a Review</h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      value={reviewForm.name}
+                      onChange={(e) => setReviewForm((prev) => ({ ...prev, name: e.target.value }))}
+                      placeholder="Your name"
+                      className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    />
+                    <select
+                      value={reviewForm.rating}
+                      onChange={(e) => setReviewForm((prev) => ({ ...prev, rating: Number(e.target.value) }))}
+                      className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    >
+                      <option value={5}>5 Stars</option>
+                      <option value={4}>4 Stars</option>
+                      <option value={3}>3 Stars</option>
+                      <option value={2}>2 Stars</option>
+                      <option value={1}>1 Star</option>
+                    </select>
+                  </div>
+
+                  <textarea
+                    value={reviewForm.text}
+                    onChange={(e) => setReviewForm((prev) => ({ ...prev, text: e.target.value }))}
+                    placeholder="Share your experience..."
+                    rows={4}
+                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  />
+
+                  {reviewError && <p className="text-sm text-destructive">{reviewError}</p>}
+                  {reviewSuccess && <p className="text-sm text-accent">{reviewSuccess}</p>}
+
+                  <button
+                    type="submit"
+                    disabled={submittingReview}
+                    className="px-6 py-3 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors font-medium disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {submittingReview ? 'Submitting...' : 'Submit Review'}
+                  </button>
+                </form>
+
+                <div className="space-y-4">
+                  <h3 className="text-foreground font-semibold">Customer Reviews</h3>
+
+                  {loadingReviews ? (
+                    <p className="text-sm text-muted-foreground">Loading reviews...</p>
+                  ) : reviews.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No reviews yet. Be the first to review this product.</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {reviews.map((review) => (
+                        <div key={review.id} className="rounded-xl border border-border bg-card/40 p-4">
+                          <div className="flex items-center justify-between gap-3 mb-2">
+                            <div>
+                              <p className="font-medium text-foreground">{review.name}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {review.createdAt.toLocaleDateString()}
+                              </p>
+                            </div>
+                            <div className="flex gap-1">
+                              {[...Array(5)].map((_, index) => (
+                                <Star
+                                  key={index}
+                                  className={`w-4 h-4 ${index < review.rating ? 'fill-accent text-accent' : 'text-muted-foreground/40'}`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-sm text-muted-foreground leading-relaxed">{review.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

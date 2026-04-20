@@ -12,7 +12,7 @@ export default function NewProductPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (data: ProductFormData, imageFile?: File) => {
+  const handleSubmit = async (data: ProductFormData, imageInputs?: Array<File | string>) => {
     setLoading(true);
     try {
       await createProduct(
@@ -24,7 +24,7 @@ export default function NewProductPage() {
           stock: data.stock,
           image: '',
         },
-        imageFile
+        imageInputs
       );
       router.push('/admin/products');
     } catch (error) {

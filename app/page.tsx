@@ -6,11 +6,12 @@ import CategoriesSection from '@/components/CategoriesSection';
 import LookbookSection from '@/components/LookbookSection';
 import PromoBanner from '@/components/PromoBanner';
 import WhyChooseUs from '@/components/WhyChooseUs';
+import Testimonials from '@/components/Testimonials';
 import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <div className="bg-[#f9f9f9] min-h-screen">
+    <div className=" min-h-screen">
       <main>
         <HeroSection />
         <FeaturedProducts />
@@ -18,6 +19,7 @@ export default function Home() {
         <CategoriesSection />
         <PromoBanner />
         <WhyChooseUs />
+        <Testimonials />
       </main>
       <Footer />
     </div>

@@ -33,7 +33,7 @@ export default function EditProductPage() {
     loadProduct();
   }, [productId]);
 
-  const handleSubmit = async (data: ProductFormData, imageFile?: File) => {
+  const handleSubmit = async (data: ProductFormData, imageInputs?: Array<File | string>) => {
     setSaving(true);
     try {
       await updateProduct(
@@ -44,9 +44,10 @@ export default function EditProductPage() {
           price: data.price,
           category: data.category,
           stock: data.stock,
+          images: product?.images,
           image: product?.image || '',
         },
-        imageFile
+        imageInputs
       );
       router.push('/admin/products');
     } catch (error) {

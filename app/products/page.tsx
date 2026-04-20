@@ -77,7 +77,7 @@ export default function ProductsPage() {
             The <span className="italic font-light text-[#5e5e5e]">Collection.</span>
           </h1>
           <p className="text-sm md:text-base font-sans text-[#474747] leading-[1.8] max-w-2xl">
-            Examine our entire repository of precision-engineered headwear. Filter by material class or specification.
+            Examine the complete Broly Store collection. Filter by material class or specification.
           </p>
         </div>
 

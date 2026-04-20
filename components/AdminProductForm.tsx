@@ -5,13 +5,29 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProductSchema, ProductFormData } from '@/lib/validation';
 import { Product } from '@/lib/types';
-import { getCategories } from '@/lib/admin-products';
-import { Upload } from 'lucide-react';
+import { getCategories, createCategory, deleteCategory } from '@/lib/admin-products';
+import { Upload, Plus, Trash2 } from 'lucide-react';
 
 interface AdminProductFormProps {
   product?: Product;
-  onSubmit: (data: ProductFormData, imageFile?: File) => Promise<void>;
+  onSubmit: (data: ProductFormData, imageInputs?: Array<File | string>) => Promise<void>;
   loading?: boolean;
+}
+
+function buildInitialImageSlots(product?: Product): Array<File | string | null> {
+  const existingImages =
+    product?.images && product.images.length > 0
+      ? product.images.slice(0, 4)
+      : product?.image
+      ? [product.image]
+      : [];
+
+  const slots: Array<File | string | null> = [null, null, null, null];
+  existingImages.forEach((image, index) => {
+    slots[index] = image;
+  });
+
+  return slots;
 }
 
 export default function AdminProductForm({
@@ -19,14 +35,19 @@ export default function AdminProductForm({
   onSubmit,
   loading = false,
 }: AdminProductFormProps) {
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>(product?.image || '');
+  const [imageSlots, setImageSlots] = useState<Array<File | string | null>>(() =>
+    buildInitialImageSlots(product)
+  );
+  const [imagePreviews, setImagePreviews] = useState<string[]>(() =>
+    buildInitialImageSlots(product).map((image) => (typeof image === 'string' ? image : ''))
+  );
   const [error, setError] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>(product?.category || '');
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [categoryActionLoading, setCategoryActionLoading] = useState(false);
 
   const {
     register,
@@ -50,6 +71,15 @@ export default function AdminProductForm({
       try {
         const fetchedCategories = await getCategories();
         setCategories(fetchedCategories);
+
+        if (product?.category) {
+          const match = fetchedCategories.find(
+            (category) => category.toLowerCase() === product.category.toLowerCase()
+          );
+          const initialCategory = match || product.category;
+          setSelectedCategory(initialCategory);
+          setValue('category', initialCategory, { shouldValidate: true });
+        }
       } catch (error) {
         console.error('Error fetching categories:', error);
       } finally {
@@ -58,18 +88,97 @@ export default function AdminProductForm({
     };
 
     fetchCategories();
-  }, []);
+  }, [product?.category, setValue]);
+
+  const applySelectedCategory = (category: string) => {
+    setSelectedCategory(category);
+    setIsCreatingNew(false);
+    setNewCategoryName('');
+    setValue('category', category, { shouldValidate: true });
+  };
+
+  const handleCreateCategory = async () => {
+    const normalized = newCategoryName.trim();
+    if (!normalized) {
+      setError('Please enter a category name');
+      return;
+    }
+
+    setError('');
+    setCategoryActionLoading(true);
+
+    try {
+      const createdCategory = await createCategory(normalized);
+      const updatedCategories = await getCategories();
+      setCategories(updatedCategories);
+      applySelectedCategory(createdCategory);
+    } catch (err: any) {
+      setError(err.message || 'Failed to create category');
+    } finally {
+      setCategoryActionLoading(false);
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    if (!selectedCategory) {
+      setError('Please select a category to delete');
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete category "${selectedCategory}"? This only works if no product uses it.`
+    );
+    if (!confirmed) return;
+
+    setError('');
+    setCategoryActionLoading(true);
+
+    try {
+      await deleteCategory(selectedCategory);
+      const updatedCategories = await getCategories();
+      setCategories(updatedCategories);
+      setSelectedCategory('');
+      setValue('category', '', { shouldValidate: true });
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete category');
+    } finally {
+      setCategoryActionLoading(false);
+    }
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const slotIndex = Number(e.target.dataset.slot);
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file || Number.isNaN(slotIndex) || slotIndex < 0 || slotIndex > 3) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImageSlots((prev) => {
+        const next = [...prev];
+        next[slotIndex] = file;
+        return next;
+      });
+
+      setImagePreviews((prev) => {
+        const next = [...prev];
+        next[slotIndex] = reader.result as string;
+        return next;
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = (slotIndex: number) => {
+    setImageSlots((prev) => {
+      const next = [...prev];
+      next[slotIndex] = null;
+      return next;
+    });
+    setImagePreviews((prev) => {
+      const next = [...prev];
+      next[slotIndex] = '';
+      return next;
+    });
   };
 
   const handleFormSubmit = async (data: ProductFormData) => {
@@ -89,8 +198,19 @@ export default function AdminProductForm({
         }
         data.category = selectedCategory;
       }
-      
-      await onSubmit(data, imageFile || undefined);
+
+      setValue('category', data.category, { shouldValidate: true });
+
+      const selectedImages = imageSlots.filter(
+        (image): image is File | string => Boolean(image)
+      );
+
+      if (selectedImages.length === 0) {
+        setError('Please upload at least one product image');
+        return;
+      }
+
+      await onSubmit(data, selectedImages);
     } catch (err: any) {
       setError(err.message || 'Failed to save product');
     }
@@ -107,33 +227,63 @@ export default function AdminProductForm({
       {/* Image Upload */}
       <div>
         <label className="block text-sm font-medium text-gray-900 mb-2">
-          Product Image (Base64 Encoded)
+          Product Images (Up to 4)
         </label>
         <p className="text-xs text-gray-500 mb-3">
-          Images are stored as base64 in the database. No Firebase Storage needed!
+          Upload up to 4 images. First image will be used as primary thumbnail.
         </p>
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50">
-          {imagePreview && (
-            <div className="mb-4">
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-full h-48 object-cover rounded-lg"
-              />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className="border border-dashed border-gray-300 rounded-lg p-3 bg-gray-50">
+              <p className="text-xs font-medium text-gray-600 mb-2">
+                Image {index + 1} {index === 0 ? '(Primary)' : ''}
+              </p>
+
+              {imagePreviews[index] ? (
+                <div className="space-y-2">
+                  <img
+                    src={imagePreviews[index]}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-32 object-cover rounded-md"
+                  />
+                  <div className="flex gap-2">
+                    <label className="flex-1 cursor-pointer inline-flex items-center justify-center gap-2 px-3 py-2 text-xs bg-white border border-gray-300 rounded-md hover:bg-gray-100 transition">
+                      <Upload className="w-4 h-4" />
+                      Replace
+                      <input
+                        type="file"
+                        accept="image/*"
+                        data-slot={index}
+                        onChange={handleImageChange}
+                        className="hidden"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="px-3 py-2 text-xs border border-red-300 text-red-600 rounded-md hover:bg-red-50 transition"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <label className="h-32 border border-gray-300 rounded-md bg-white flex items-center justify-center cursor-pointer hover:bg-gray-100 transition">
+                  <div className="flex items-center gap-2 text-gray-600 text-xs font-medium">
+                    <Upload className="w-4 h-4" />
+                    Upload Image
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    data-slot={index}
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
+              )}
             </div>
-          )}
-          <label className="cursor-pointer">
-            <div className="flex items-center justify-center gap-2 text-gray-600">
-              <Upload className="w-5 h-5" />
-              <span>Click to upload or drag and drop</span>
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-          </label>
+          ))}
         </div>
       </div>
 
@@ -173,7 +323,7 @@ export default function AdminProductForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            Price ($)
+            Price (PKR)
           </label>
           <input
             {...register('price', { valueAsNumber: true })}
@@ -210,6 +360,8 @@ export default function AdminProductForm({
         <label className="block text-sm font-medium text-gray-900 mb-2">
           Category
         </label>
+
+        <input type="hidden" {...register('category')} />
         
         <div className="space-y-3">
           {loadingCategories ? (
@@ -222,10 +374,9 @@ export default function AdminProductForm({
                   setIsCreatingNew(true);
                   setSelectedCategory('');
                   setNewCategoryName('');
+                  setValue('category', '', { shouldValidate: true });
                 } else {
-                  setIsCreatingNew(false);
-                  setSelectedCategory(e.target.value);
-                  setNewCategoryName('');
+                  applySelectedCategory(e.target.value);
                 }
               }}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
@@ -242,13 +393,41 @@ export default function AdminProductForm({
 
           {/* New Category Input */}
           {isCreatingNew && (
-            <input
-              type="text"
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-              placeholder="Enter new category name"
-              className="w-full px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-blue-50"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={newCategoryName}
+                onChange={(e) => {
+                  setNewCategoryName(e.target.value);
+                  setValue('category', e.target.value, { shouldValidate: true });
+                }}
+                placeholder="Enter new category name"
+                className="flex-1 px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-blue-50"
+              />
+              <button
+                type="button"
+                onClick={handleCreateCategory}
+                disabled={categoryActionLoading}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                <Plus className="w-4 h-4" />
+                Save Category
+              </button>
+            </div>
+          )}
+
+          {!isCreatingNew && selectedCategory && (
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={handleDeleteCategory}
+                disabled={categoryActionLoading}
+                className="inline-flex items-center gap-2 px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete Category
+              </button>
+            </div>
           )}
         </div>
 
