@@ -1,5 +1,5 @@
-const fallbackAdminEmail = 'admin@brolycaps.com';
-const fallbackAdminPassword = 'BrolyCaps@2026';
+const fallbackAdminEmail = 'admin@brolystore.com';
+const fallbackAdminPassword = 'brolystore@2026';
 
 export function getAdminCredentials() {
   return {

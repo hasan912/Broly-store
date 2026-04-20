@@ -9,7 +9,7 @@ import { Order, Product } from '@/lib/types';
 import { getProductById } from '@/lib/products';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Info, Package, Truck, CreditCard } from 'lucide-react';
 
 export default function OrderDetailPage() {
   const params = useParams();
@@ -27,7 +27,6 @@ export default function OrderDetailPage() {
           const orderData = orderDoc.data() as Order;
           setOrder({ ...orderData, id: orderId });
 
-          // Load product details
           const productMap: { [key: string]: Product } = {};
           for (const item of orderData.items) {
             const product = await getProductById(item.productId);
@@ -61,7 +60,6 @@ export default function OrderDetailPage() {
       );
     } catch (error) {
       console.error('Error updating order status:', error);
-      alert('Failed to update order status');
     } finally {
       setUpdating(false);
     }
@@ -69,95 +67,115 @@ export default function OrderDetailPage() {
 
   if (loading) {
     return (
-      <div className="p-8 flex items-center justify-center h-full">
-        <p className="text-gray-600">Loading order...</p>
+      <div className="p-8 md:p-16 flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-16 h-[1px] bg-primary/20 relative overflow-hidden">
+             <div className="absolute inset-0 bg-primary animate-slide-right" />
+          </div>
+          <p className="text-[10px] font-bold tracking-[0.3em] text-muted-foreground uppercase">Decrypting Order Data</p>
+        </div>
       </div>
     );
   }
 
   if (!order) {
     return (
-      <div className="p-8">
-        <p className="text-gray-600">Order not found</p>
+      <div className="p-8 md:p-16 text-center">
+        <p className="text-sm font-bold tracking-widest text-destructive uppercase mb-8">Order reference not found.</p>
+        <Link href="/admin/orders" className="text-xs font-bold text-primary underline underline-offset-8 uppercase">RETURN TO MANIFEST</Link>
       </div>
     );
   }
 
   const shippingCost = order.total > 100 ? 0 : 10;
   const finalTotal = order.total + shippingCost;
-
   const statusOptions: Order['status'][] = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
 
   return (
-    <div className="p-8">
-      <Link
-        href="/admin/orders"
-        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 transition"
-      >
-        <ChevronLeft className="w-5 h-5" />
-        Back to Orders
-      </Link>
+    <div className="p-8 md:p-12 lg:p-16 max-w-7xl mx-auto animate-fade-in-up">
+      <div className="mb-16">
+        <Link
+          href="/admin/orders"
+          className="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-12 transition-all duration-500"
+        >
+          <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-2 duration-500" />
+          <span className="text-[10px] font-bold tracking-[0.2em] uppercase">Return to Manifest</span>
+        </Link>
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Details</h1>
-        <p className="text-gray-600">Order ID: {order.id}</p>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
+           <div>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-1 px-3 py-1 bg-primary" />
+                <h1 className="text-4xl md:text-5xl font-serif tracking-tight text-primary uppercase">INSPECT ORDER</h1>
+              </div>
+              <p className="text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">REFERENCE ID: {order.id.toUpperCase()}</p>
+           </div>
+           <div className="px-6 py-3 bg-muted border border-border/40">
+              <span className="text-[10px] font-bold tracking-widest text-primary uppercase">STATUS: {order.status}</span>
+           </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Order Information */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Customer Information */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Customer Information</h2>
-            <div className="space-y-2 text-gray-700">
-              <p>
-                <span className="font-semibold">Name:</span>{' '}
-                {order.shippingAddress.fullName}
-              </p>
-              <p>
-                <span className="font-semibold">Email:</span>{' '}
-                {order.shippingAddress.email}
-              </p>
-              <p>
-                <span className="font-semibold">Phone:</span>{' '}
-                {order.shippingAddress.phone}
-              </p>
-              <p>
-                <span className="font-semibold">Address:</span>{' '}
-                {order.shippingAddress.street}, {order.shippingAddress.city},{' '}
-                {order.shippingAddress.state} {order.shippingAddress.zipCode},{' '}
-                {order.shippingAddress.country}
-              </p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="lg:col-span-2 space-y-12">
+          {/* Client Information */}
+          <section className="p-10 border border-border/40 bg-white shadow-soft">
+            <div className="flex items-center gap-4 mb-8">
+               <Info className="w-4 h-4 text-primary" />
+               <h2 className="text-[10px] font-bold tracking-[0.3em] text-primary uppercase">CLIENT IDENTITY</h2>
             </div>
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+               <div>
+                  <label className="block text-[8px] font-extrabold tracking-[0.2em] text-muted-foreground uppercase mb-2">FULL NAME</label>
+                  <p className="text-lg font-serif text-primary tracking-tight">{order.shippingAddress.fullName}</p>
+               </div>
+               <div>
+                  <label className="block text-[8px] font-extrabold tracking-[0.2em] text-muted-foreground uppercase mb-2">EMAIL ADDRESS</label>
+                  <p className="text-sm font-bold tracking-tight text-primary underline underline-offset-4 decoration-border/40">{order.shippingAddress.email}</p>
+               </div>
+               <div>
+                  <label className="block text-[8px] font-extrabold tracking-[0.2em] text-muted-foreground uppercase mb-2">CONTACT NUMBER</label>
+                  <p className="text-sm font-bold tracking-tight text-primary">{order.shippingAddress.phone}</p>
+               </div>
+               <div>
+                  <label className="block text-[8px] font-extrabold tracking-[0.2em] text-muted-foreground uppercase mb-2">SHIPPING DESTINATION</label>
+                  <p className="text-sm font-bold tracking-tight text-primary leading-relaxed">
+                    {order.shippingAddress.street}<br />
+                    {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}<br />
+                    {order.shippingAddress.country.toUpperCase()}
+                  </p>
+               </div>
+            </div>
+          </section>
 
-          {/* Order Items */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Order Items</h2>
-            <div className="space-y-4">
+          {/* Consignment Items */}
+          <section className="p-10 border border-border/40 bg-white shadow-soft">
+            <div className="flex items-center gap-4 mb-8">
+               <Package className="w-4 h-4 text-primary" />
+               <h2 className="text-[10px] font-bold tracking-[0.3em] text-primary uppercase">CONSIGNMENT COMPOSITION</h2>
+            </div>
+            <div className="divide-y divide-border/20">
               {order.items.map((item) => {
                 const product = products[item.productId];
                 if (!product) return null;
 
                 return (
-                  <div key={item.productId} className="flex gap-4 pb-4 border-b border-gray-200 last:border-b-0">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                  <div key={item.productId} className="py-8 first:pt-0 last:pb-0 flex items-center gap-8 group">
+                    <div className="w-24 h-32 bg-muted relative overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-1000">
                       <Image
                         src={product.image}
                         alt={product.name}
-                        width={64}
-                        height={64}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
                       />
                     </div>
-                    <div className="grow">
-                      <p className="font-semibold text-gray-900">{product.name}</p>
-                      <p className="text-sm text-gray-600">
-                        Quantity: {item.quantity} × ${product.price.toFixed(2)}
-                      </p>
+                    <div className="flex-1">
+                      <p className="text-xl font-serif tracking-tight text-primary mb-1">{product.name}</p>
+                      <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">QUANTITY: {item.quantity.toString().padStart(2, '0')}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-gray-900">
+                      <p className="text-[10px] font-bold tracking-widest text-muted-foreground mb-1 uppercase">UNIT PRICE</p>
+                      <p className="text-2xl font-serif tracking-tighter text-primary">
                         ${(product.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
@@ -165,80 +183,83 @@ export default function OrderDetailPage() {
                 );
               })}
             </div>
-          </div>
+          </section>
 
-          {/* Order Timeline */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Order Timeline</h2>
-            <div className="space-y-3 text-sm text-gray-600">
-              <p>
-                <span className="font-semibold">Created:</span>{' '}
-                {new Date(order.createdAt).toLocaleString()}
-              </p>
-              <p>
-                <span className="font-semibold">Last Updated:</span>{' '}
-                {new Date(order.updatedAt).toLocaleString()}
-              </p>
-            </div>
-          </div>
+          {/* Chronology */}
+          <section className="p-10 border border-border/40 bg-white shadow-soft">
+             <div className="flex items-center gap-4 mb-6">
+                <Truck className="w-4 h-4 text-primary" />
+                <h2 className="text-[10px] font-bold tracking-[0.3em] text-primary uppercase">CHRONOLOGY</h2>
+             </div>
+             <div className="flex gap-12">
+                <div>
+                   <label className="block text-[8px] font-extrabold tracking-[0.2em] text-muted-foreground uppercase mb-2">REGISTRATION DATE</label>
+                   <p className="text-xs font-bold tracking-widest text-primary">{new Date(order.createdAt).toLocaleString().toUpperCase()}</p>
+                </div>
+                <div>
+                   <label className="block text-[8px] font-extrabold tracking-[0.2em] text-muted-foreground uppercase mb-2">LAST SYNCHRONISATION</label>
+                   <p className="text-xs font-bold tracking-widest text-primary">{new Date(order.updatedAt).toLocaleString().toUpperCase()}</p>
+                </div>
+             </div>
+          </section>
         </div>
 
-        {/* Sidebar */}
-        <div>
-          {/* Status Update */}
-          <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Order Status</h2>
+        {/* Control Panel */}
+        <div className="space-y-8">
+          <section className="p-10 border border-border/40 bg-white shadow-soft sticky top-10">
+            <h2 className="text-[10px] font-bold tracking-[0.3em] text-primary uppercase mb-8">CONTROL INTERFACE</h2>
 
-            <div className="mb-6 p-3 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600 mb-2">Current Status</p>
-              <p className="text-xl font-bold text-gray-900 capitalize">{order.status}</p>
+            <div className="mb-10 p-6 bg-primary text-white">
+              <p className="text-[9px] font-bold tracking-widest opacity-60 mb-2 uppercase">CURRENT CLASSIFICATION</p>
+              <p className="text-xl font-serif tracking-tight uppercase">{order.status}</p>
             </div>
 
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-900 mb-2">
-                Update Status
+            <div className="mb-12">
+              <label className="block text-[9px] font-bold tracking-[0.2em] text-muted-foreground uppercase mb-4">
+                MODIFY STATE
               </label>
-              <select
-                value={order.status}
-                onChange={(e) => handleStatusChange(e.target.value as Order['status'])}
-                disabled={updating}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100"
-              >
+              <div className="space-y-2">
                 {statusOptions.map((status) => (
-                  <option key={status} value={status} className="capitalize">
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </option>
+                  <button
+                    key={status}
+                    onClick={() => handleStatusChange(status)}
+                    disabled={updating || order.status === status}
+                    className={`w-full px-6 py-4 text-[10px] font-bold tracking-widest border text-left transition-all duration-500 uppercase ${
+                      order.status === status
+                        ? 'bg-primary text-white border-primary cursor-default'
+                        : 'bg-transparent text-primary border-border/60 hover:bg-muted disabled:opacity-50'
+                    }`}
+                  >
+                    {status}
+                  </button>
                 ))}
-              </select>
+              </div>
             </div>
 
-            {/* Order Total */}
-            <div className="border-t border-gray-200 pt-6">
-              <div className="space-y-3 mb-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span className="font-semibold text-gray-900">
-                    ${order.total.toFixed(2)}
-                  </span>
+            <div className="pt-8 border-t border-border/40">
+              <div className="flex items-center gap-3 mb-6">
+                 <CreditCard className="w-4 h-4 text-primary" />
+                 <h3 className="text-[10px] font-bold tracking-[0.3em] text-primary uppercase">VALUATION SUMMARY</h3>
+              </div>
+              <div className="space-y-4 mb-8">
+                <div className="flex justify-between items-center text-[10px] font-bold tracking-widest">
+                  <span className="text-muted-foreground uppercase">SUBTOTAL</span>
+                  <span className="text-primary">${order.total.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">
-                    Shipping {shippingCost === 0 && <span className="text-green-600">(FREE)</span>}
-                  </span>
-                  <span className="font-semibold text-gray-900">
-                    ${shippingCost.toFixed(2)}
-                  </span>
+                <div className="flex justify-between items-center text-[10px] font-bold tracking-widest">
+                  <span className="text-muted-foreground uppercase">LOGISTICS</span>
+                  <span className="text-primary">${shippingCost.toFixed(2)}</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center pt-4 border-t border-gray-200">
-                <span className="font-bold text-gray-900">Total</span>
-                <span className="text-xl font-bold text-blue-600">
+              <div className="flex justify-between items-end pt-6 border-t border-border/60">
+                <span className="text-[10px] font-extrabold tracking-[0.3em] text-primary uppercase">GRAND TOTAL</span>
+                <span className="text-3xl font-serif tracking-tighter text-primary">
                   ${finalTotal.toFixed(2)}
                 </span>
               </div>
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </div>

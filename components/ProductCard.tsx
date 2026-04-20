@@ -91,12 +91,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Content Container */}
-        <div className="flex flex-col flex-grow px-1">
+        <div className="flex flex-col grow px-1">
           <div className="flex flex-col mb-1">
             <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#8e8e8e] mb-1.5 line-clamp-1">
               {product.description || 'Apparel'}
             </p>
-            <h3 className="font-serif text-lg leading-snug text-[#000000] group-hover:text-[#5e5e5e] transition-colors duration-300 line-clamp-1">
+            <h3 className="font-serif text-lg leading-snug text-[#000000] group-hover:text-muted-foreground transition-colors duration-300 line-clamp-1">
               {product.name}
             </h3>
           </div>

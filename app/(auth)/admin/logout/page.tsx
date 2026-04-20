@@ -13,7 +13,7 @@ export default function AdminLogoutPage() {
         await logoutUser();
         await fetch('/api/admin/logout', { method: 'POST' });
       } finally {
-        router.replace('/admin/login');
+        router.replace('/');
         router.refresh();
       }
     }

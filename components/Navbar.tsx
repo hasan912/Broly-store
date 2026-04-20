@@ -39,7 +39,7 @@ export default function Navbar() {
             <div
               className="w-10 h-10 flex items-center justify-center transition-all duration-800 ease-[cubic-bezier(0.16,1,0.3,1)]"
             >
-              <Image src="/logo.PNG" alt="Logo" width={32} height={32} className="opacity-90 mix-blend-multiply" />
+              <Image src="/logo.png" alt="Logo" width={32} height={32} className="opacity-90 mix-blend-multiply" />
             </div>
             <span className="hidden sm:inline font-serif text-xl tracking-tighter text-[#1a1c1c]">BROLY STORE</span>
           </Link>
@@ -52,7 +52,7 @@ export default function Navbar() {
           <div className="flex items-center gap-8">
             <Link
               href="/cart"
-              className="relative transition-colors text-[#5e5e5e] hover:text-[#000000]"
+              className="relative transition-colors text-muted-foreground hover:text-[#000000]"
             >
               <ShoppingCart className="w-4 h-4" />
               {itemCount > 0 && (
@@ -67,7 +67,7 @@ export default function Navbar() {
             {user ? (
               <Link
                 href="/logout"
-                className="transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] text-[10px] uppercase tracking-widest hidden sm:flex items-center text-[#5e5e5e] hover:text-[#000000]"
+                className="transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] text-[10px] uppercase tracking-widest hidden sm:flex items-center text-muted-foreground hover:text-[#000000]"
               >
                 <span>Logout</span>
               </Link>
@@ -82,7 +82,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              className="lg:hidden transition-colors text-[#5e5e5e] hover:text-[#000000]"
+              className="lg:hidden transition-colors text-muted-foreground hover:text-[#000000]"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -91,7 +91,7 @@ export default function Navbar() {
         </div>
 
         {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 w-full bg-[#f9f9f9] border-b border-[#e8e8e8] py-4 space-y-2 animate-fade-down shadow-sm">
+          <div className="lg:hidden absolute top-full left-0 w-full bg-background border-b border-[#e8e8e8] py-4 space-y-2 animate-fade-down shadow-sm">
             <MobileNavLink href="/" label="HOME" onClick={() => setIsMobileMenuOpen(false)} />
             <MobileNavLink href="/about" label="OUR CRAFT" onClick={() => setIsMobileMenuOpen(false)} />
             <MobileNavLink href="/products" label="THE COLLECTION" onClick={() => setIsMobileMenuOpen(false)} />
@@ -116,7 +116,7 @@ function NavLink({ href, label }: NavLinkProps) {
   return (
     <Link
       href={href}
-      className="group flex flex-col items-center transition-colors duration-500 relative text-[#5e5e5e] hover:text-[#000000]"
+      className="group flex flex-col items-center transition-colors duration-500 relative text-muted-foreground hover:text-[#000000]"
     >
       <span className="text-[10px] font-mono tracking-widest uppercase">{label}</span>
       <span
@@ -137,7 +137,7 @@ function MobileNavLink({ href, label, onClick }: MobileNavLinkProps) {
     <Link
       href={href}
       onClick={onClick}
-      className="flex items-center px-6 py-3 transition-all duration-300 text-[#5e5e5e] hover:text-[#000000] hover:bg-[#e8e8e8]"
+      className="flex items-center px-6 py-3 transition-all duration-300 text-muted-foreground hover:text-[#000000] hover:bg-[#e8e8e8]"
     >
       <span className="text-[10px] font-mono uppercase tracking-widest">{label}</span>
     </Link>

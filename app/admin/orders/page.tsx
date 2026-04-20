@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { getOrders } from '@/lib/admin-orders';
-import { Order, Product } from '@/lib/types';
-import { getProductById } from '@/lib/products';
+import { Order } from '@/lib/types';
 import Link from 'next/link';
-import { Eye } from 'lucide-react';
+import { Eye, ArrowRight, Clock } from 'lucide-react';
+
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -26,112 +27,123 @@ export default function AdminOrdersPage() {
     loadOrders();
   }, []);
 
-  const getStatusColor = (status: Order['status']) => {
-    const colors: Record<Order['status'], string> = {
-      pending: 'bg-yellow-100 text-yellow-700',
-      confirmed: 'bg-blue-100 text-blue-700',
-      shipped: 'bg-purple-100 text-purple-700',
-      delivered: 'bg-green-100 text-green-700',
-      cancelled: 'bg-red-100 text-red-700',
+  const getStatusStyle = (status: Order['status']) => {
+    const styles: Record<Order['status'], string> = {
+      pending: 'border-amber-200 text-amber-700 bg-amber-50/50',
+      confirmed: 'border-blue-200 text-blue-700 bg-blue-50/50',
+      shipped: 'border-purple-200 text-purple-700 bg-purple-50/50',
+      delivered: 'border-primary text-primary bg-muted',
+      cancelled: 'border-destructive/20 text-destructive bg-destructive/5',
     };
-    return colors[status];
+    return styles[status] || 'border-border text-muted-foreground';
   };
 
   if (loading) {
     return (
-      <div className="p-8 flex items-center justify-center h-full">
-        <p className="text-gray-600">Loading orders...</p>
+      <div className="p-8 md:p-16 flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-16 h-[1px] bg-primary/20 relative overflow-hidden">
+             <div className="absolute inset-0 bg-primary animate-slide-right" />
+          </div>
+          <p className="text-[10px] font-bold tracking-[0.3em] text-muted-foreground uppercase">Processing Manifests</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Orders</h1>
-        <p className="text-gray-600">Manage customer orders</p>
+    <div className="p-8 md:p-12 lg:p-16 max-w-7xl mx-auto animate-fade-in-up">
+      {/* Header */}
+      <div className="mb-20">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-1 px-3 py-1 bg-primary" />
+          <h1 className="text-4xl md:text-5xl font-serif tracking-tight text-primary uppercase">ORDERS</h1>
+        </div>
+        <p className="text-sm font-medium text-muted-foreground tracking-wide max-w-2xl">
+          Monitor and fulfill client requests. Every order is a commitment to excellence and prompt delivery.
+        </p>
       </div>
 
       {orders.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-600">No orders found</p>
+        <div className="py-32 text-center border border-dashed border-border/60">
+          <p className="text-sm font-medium text-muted-foreground mb-4 tracking-widest uppercase">No orders recorded yet</p>
+          <div className="flex items-center justify-center gap-2 text-primary opacity-50">
+             <Clock className="w-4 h-4" />
+             <span className="text-[10px] font-bold tracking-widest">AWAITING TRANSACTIONS</span>
+          </div>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Order ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Customer
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Items
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Total
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Date
-                  </th>
-                  <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order) => (
-                  <tr key={order.id} className="border-b border-gray-200 hover:bg-gray-50">
-                    <td className="px-6 py-4 font-mono text-sm text-gray-900">
-                      {order.id.substring(0, 8)}...
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-semibold text-gray-900">
-                          {order.shippingAddress.fullName}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {order.shippingAddress.email}
-                        </p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-gray-700">
-                      {order.items.length} item{order.items.length !== 1 ? 's' : ''}
-                    </td>
-                    <td className="px-6 py-4 font-semibold text-gray-900">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-primary/10">
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">Order Reference</th>
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase px-4">Client Detail</th>
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase text-center px-4">Volume</th>
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase text-right px-4">Valuation</th>
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase px-4">Status</th>
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase text-right">Date</th>
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/20">
+              {orders.map((order) => (
+                <tr key={order.id} className="group hover:bg-muted/30 transition-colors duration-500">
+                  <td className="py-8 pr-4">
+                    <span className="font-mono text-xs text-primary/60 group-hover:text-primary transition-colors">
+                      {order.id.substring(0, 12).toUpperCase()}
+                    </span>
+                  </td>
+                  <td className="py-8 px-4">
+                    <div>
+                      <p className="text-sm font-bold text-primary group-hover:translate-x-1 transition-transform duration-700">
+                        {order.shippingAddress.fullName.toUpperCase()}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground tracking-wider underline underline-offset-4 decoration-border/40">
+                        {order.shippingAddress.email}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="py-8 px-4 text-center">
+                    <span className="text-xs font-bold text-muted-foreground">
+                      {order.items.length.toString().padStart(2, '0')} PCS
+                    </span>
+                  </td>
+                  <td className="py-8 px-4 text-right">
+                    <span className="text-lg font-serif tracking-tighter text-primary">
                       ${order.total.toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-semibold capitalize ${getStatusColor(
-                          order.status
-                        )}`}
-                      >
-                        {order.status}
+                    </span>
+                  </td>
+                  <td className="py-8 px-4 whitespace-nowrap">
+                    <span
+                      className={`px-4 py-1.5 border text-[10px] font-extrabold tracking-[0.1em] uppercase transition-all duration-700 ${getStatusStyle(
+                        order.status
+                      )}`}
+                    >
+                      {order.status}
+                    </span>
+                  </td>
+                  <td className="py-8 px-4 text-right">
+                    <div className="flex flex-col items-end">
+                       <span className="text-[10px] font-bold text-primary">
+                        {new Date(order.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 text-gray-700">
-                      {new Date(order.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <Link
-                        href={`/admin/orders/${order.id}`}
-                        className="inline-flex items-center gap-2 p-2 text-blue-600 hover:bg-blue-50 rounded transition"
-                      >
-                        <Eye className="w-5 h-5" />
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <span className="text-[8px] font-bold text-muted-foreground tracking-tighter">REGISTRATION</span>
+                    </div>
+                  </td>
+                  <td className="py-8 pl-4 text-right">
+                    <Link
+                      href={`/admin/orders/${order.id}`}
+                      className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-white border border-border/40 text-primary hover:bg-primary hover:text-white transition-all duration-700 shadow-soft"
+                    >
+                      <span className="text-[10px] font-bold tracking-widest uppercase">Inspect</span>
+                      <Eye className="w-4 h-4 transition-transform group-hover/btn:scale-110" />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

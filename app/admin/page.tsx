@@ -7,6 +7,8 @@ import { Package, ShoppingBag, DollarSign, Users, ArrowRight, TrendingUp } from 
 import Link from 'next/link';
 import { Card3D } from '@/components/ui/card-3d';
 
+import LoadingSpinner from '@/components/LoadingSpinner';
+
 interface DashboardStats {
   totalProducts: number;
   totalOrders: number;
@@ -26,11 +28,9 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function loadStats() {
       try {
-        // Get products count
         const productsSnapshot = await getDocs(collection(db, 'products'));
         const totalProducts = productsSnapshot.size;
 
-        // Get orders and calculate revenue
         const ordersSnapshot = await getDocs(collection(db, 'orders'));
         const totalOrders = ordersSnapshot.size;
         let totalRevenue = 0;
@@ -38,7 +38,6 @@ export default function AdminDashboard() {
           totalRevenue += doc.data().total || 0;
         });
 
-        // Get users count
         const usersSnapshot = await getDocs(collection(db, 'users'));
         const totalUsers = usersSnapshot.size;
 
@@ -60,119 +59,127 @@ export default function AdminDashboard() {
 
   const statCards = [
     {
-      title: 'Total Products',
+      title: 'TOTAL PRODUCTS',
       value: stats.totalProducts,
       icon: Package,
-      gradient: 'from-primary to-primary/80',
       href: '/admin/products',
     },
     {
-      title: 'Total Orders',
+      title: 'TOTAL ORDERS',
       value: stats.totalOrders,
       icon: ShoppingBag,
-      gradient: 'from-accent to-accent/80',
       href: '/admin/orders',
     },
     {
-      title: 'Total Revenue',
-      value: `$${stats.totalRevenue.toFixed(2)}`,
+      title: 'TOTAL REVENUE',
+      value: `PKR ${stats.totalRevenue.toFixed(2)}`,
       icon: DollarSign,
-      gradient: 'from-purple-500 to-purple-600',
       href: '/admin/orders',
     },
     {
-      title: 'Total Users',
+      title: 'TOTAL USERS',
       value: stats.totalUsers,
       icon: Users,
-      gradient: 'from-primary/70 to-accent/70',
       href: '#',
     },
   ];
 
   const quickActions = [
     {
-      title: 'Add New Product',
-      description: 'Create a new product listing',
+      title: 'ADD NEW PRODUCT',
+      description: 'Create a new product listing in the inventory.',
       href: '/admin/products/new',
     },
     {
-      title: 'View Orders',
-      description: 'Manage customer orders',
+      title: 'VIEW ORDERS',
+      description: 'Manage and fulfill current customer orders.',
       href: '/admin/orders',
     },
     {
-      title: 'Manage Products',
-      description: 'Edit existing products',
+      title: 'MANAGE PRODUCTS',
+      description: 'Edit, update, or archive existing products.',
       href: '/admin/products',
     },
     {
-      title: 'View Store',
-      description: 'Visit the public store',
+      title: 'VISIT STOREFRONT',
+      description: 'See how changes appear to your customers.',
       href: '/',
     },
   ];
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading dashboard...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
-    <div className="p-6 md:p-8 animate-fade-in-up">
+    <div className="p-8 md:p-12 lg:p-16 max-w-7xl mx-auto animate-fade-in-up">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 mb-2">
-          <TrendingUp className="w-6 h-6 text-primary" />
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground">Dashboard</h1>
+      <div className="mb-16">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-1 px-3 py-1 bg-primary" />
+          <h1 className="text-4xl md:text-5xl font-serif tracking-tight text-primary uppercase">CONSOLE</h1>
         </div>
-        <p className="text-muted-foreground">Welcome back! Here's what's happening with your store.</p>
+        <p className="text-sm font-medium text-muted-foreground tracking-wide max-w-2xl">
+          Welcome to the management console. Oversee your inventory, orders, and business performance from a unified architectural interface.
+        </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
         {statCards.map((card) => {
           const Icon = card.icon;
           return (
-            <Link key={card.title} href={card.href}>
-              <Card3D className="group cursor-pointer h-full" hover={true}>
-                <div className="flex items-center justify-between mb-4">
-                  <div className={`p-3 rounded-lg bg-linear-to-br ${card.gradient} shadow-soft`}>
-                    <Icon className="w-6 h-6 text-white" />
+            <Link key={card.title} href={card.href} className="group">
+              <Card3D className="h-full border-border/40 hover:border-primary transition-colors duration-700" hover={true}>
+                <div className="flex flex-col h-full justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-8">
+                       <Icon className="w-5 h-5 text-primary opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+                       <ArrowRight className="w-4 h-4 text-primary opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500" />
+                    </div>
+                    <p className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground mb-2">{card.title}</p>
+                    <p className="text-4xl font-serif text-primary tracking-tighter">{card.value}</p>
+                  </div>
+                  <div className="mt-8 pt-4 border-t border-border/20">
+                     <span className="text-[10px] font-bold text-primary group-hover:tracking-widest transition-all duration-500">VIEW DETAILS</span>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground mb-1">{card.title}</p>
-                <p className="text-3xl font-bold text-foreground">{card.value}</p>
               </Card3D>
             </Link>
           );
         })}
       </div>
 
-      {/* Quick Actions */}
-      <Card3D depth="lg">
-        <h2 className="text-xl font-bold text-foreground mb-6">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {quickActions.map((action) => (
-            <Link
-              key={action.title}
-              href={action.href}
-              className="p-5 border border-border rounded-lg hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 flex items-center justify-between group"
-            >
-              <div>
-                <p className="font-semibold text-foreground mb-1">{action.title}</p>
-                <p className="text-sm text-muted-foreground">{action.description}</p>
-              </div>
-              <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-            </Link>
-          ))}
+      {/* Quick Actions & Insight */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-2">
+          <div className="mb-8">
+            <h2 className="text-xl font-bold tracking-[0.15em] text-primary uppercase mb-2">QUICK ACTIONS</h2>
+            <div className="h-px bg-border/40 w-full" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {quickActions.map((action) => (
+              <Link
+                key={action.title}
+                href={action.href}
+                className="group relative"
+              >
+                <div className="p-8 border border-border/40 bg-white hover:bg-muted transition-all duration-700 h-full flex flex-col justify-between overflow-hidden">
+                  <div className="relative z-10">
+                    <p className="text-xs font-bold tracking-[0.2em] text-primary mb-3">{action.title}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{action.description}</p>
+                  </div>
+                  <div className="mt-6 flex items-center gap-2 text-[10px] font-bold tracking-widest text-primary opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                    EXECUTE <ArrowRight className="w-3 h-3" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
-      </Card3D>
+
+       
+      </div>
     </div>
   );
 }

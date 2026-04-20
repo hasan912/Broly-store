@@ -74,7 +74,7 @@ function Tilt3DCard({ feature, index }: { feature: any, index: number }) {
             <h3 className="text-2xl font-serif text-[#000000] mb-4">
               {feature.title}
             </h3>
-            <p className="text-sm font-sans text-[#5e5e5e] leading-relaxed">
+            <p className="text-sm font-sans text-muted-foreground leading-relaxed">
               {feature.description}
             </p>
           </div>
@@ -86,7 +86,7 @@ function Tilt3DCard({ feature, index }: { feature: any, index: number }) {
 
 export default function WhyChooseUs() {
   return (
-    <section className="w-full py-24 md:py-32 bg-[#f9f9f9] border-b border-[#e8e8e8] overflow-hidden">
+    <section className="w-full py-24 md:py-32 bg-background border-b border-[#e8e8e8] overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-8">
 
         {/* Header */}
@@ -100,13 +100,13 @@ export default function WhyChooseUs() {
           <h2 className="text-4xl md:text-5xl font-serif text-[#000000] tracking-tight mb-4">
             Engineered Advantages.
           </h2>
-          <p className="text-sm font-sans text-[#5e5e5e] max-w-xl">
+          <p className="text-sm font-sans text-muted-foreground max-w-xl">
             Every unit is supported by a robust infrastructure designed to eliminate friction and ensure perfection.
           </p>
         </motion.div>
 
         {/* 3D Tilt Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 pl-[1px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 pl-px">
           {features.map((feature, index) => (
             <motion.div
               key={index}

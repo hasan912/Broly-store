@@ -6,7 +6,9 @@ import { deleteProduct } from '@/lib/admin-products';
 import { Product } from '@/lib/types';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2, ArrowUpRight, Search } from 'lucide-react';
+
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -44,119 +46,131 @@ export default function AdminProductsPage() {
   }
 
   if (loading) {
-    return (
-      <div className="p-8 flex items-center justify-center h-full">
-        <p className="text-gray-600">Loading products...</p>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-8">
+    <div className="p-8 md:p-12 lg:p-16 max-w-7xl mx-auto animate-fade-in-up">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-20">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Products</h1>
-          <p className="text-gray-600">Manage your product inventory</p>
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-1 px-3 py-1 bg-primary" />
+            <h1 className="text-4xl md:text-5xl font-serif tracking-tight text-primary uppercase">INVENTORY</h1>
+          </div>
+          <p className="text-sm font-medium text-muted-foreground tracking-wide">
+            Curate and manage your luxury collection. Ensure each piece is presented with architectural precision.
+          </p>
         </div>
         <Link
           href="/admin/products/new"
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          className="group flex items-center gap-4 bg-primary text-white px-8 py-5 transition-all duration-700 hover:bg-muted-foreground"
         >
-          <Plus className="w-5 h-5" />
-          <span>Add Product</span>
+          <span className="text-xs font-bold tracking-[0.2em] uppercase">Add New Product</span>
+          <Plus className="w-4 h-4 transition-transform group-hover:rotate-90 duration-500" />
         </Link>
       </div>
 
+      {/* Search & Filter Bar (Minimalist) */}
+      <div className="flex items-center gap-6 mb-12 pb-6 border-b border-border/40">
+        <Search className="w-4 h-4 text-muted-foreground" />
+        <input 
+          type="text" 
+          placeholder="SEARCH COLLECTION..." 
+          className="bg-transparent border-none outline-none text-xs font-bold tracking-widest w-full placeholder:text-muted-foreground/50"
+        />
+      </div>
+
       {products.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-600 mb-4">No products found</p>
+        <div className="py-32 text-center border border-dashed border-border/60">
+          <p className="text-sm font-medium text-muted-foreground mb-8 tracking-widest uppercase">The collection is currently empty</p>
           <Link
             href="/admin/products/new"
-            className="text-blue-600 hover:underline font-semibold"
+            className="text-xs font-bold text-primary underline underline-offset-8 tracking-widest hover:text-muted-foreground transition-colors"
           >
-            Create your first product
+            CREATE FIRST MASTERPIECE
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Product
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Category
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Price
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Stock
-                  </th>
-                  <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((product) => (
-                  <tr key={product.id} className="border-b border-gray-200 hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                          <Image
-                            src={product.image}
-                            alt={product.name}
-                            width={48}
-                            height={48}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900">{product.name}</p>
-                          <p className="text-sm text-gray-600">ID: {product.id}</p>
-                        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-primary/10">
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">Product Details</th>
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">Category</th>
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase text-center">Stock</th>
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase text-right">Price</th>
+                <th className="pb-6 text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/20">
+              {products.map((product) => (
+                <tr key={product.id} className="group hover:bg-muted/30 transition-colors duration-500">
+                  <td className="py-8 pr-6">
+                    <div className="flex items-center gap-8">
+                       <div className="w-20 h-24 bg-muted relative overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-1000">
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                        />
                       </div>
-                    </td>
-                    <td className="px-6 py-4 text-gray-700">{product.category}</td>
-                    <td className="px-6 py-4 font-semibold text-gray-900">
-                      ${product.price.toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                          product.stock > 0
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                        }`}
-                      >
-                        {product.stock}
+                      <div>
+                        <p className="text-lg font-serif tracking-tight text-primary mb-1 group-hover:translate-x-1 transition-transform duration-700">{product.name}</p>
+                        <p className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase">UID: {product.id.slice(0, 8)}...</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-8 px-4">
+                    <span className="text-[10px] font-bold tracking-widest text-primary/70 uppercase px-3 py-1 bg-muted group-hover:bg-primary group-hover:text-white transition-all duration-700">
+                      {product.category}
+                    </span>
+                  </td>
+                  <td className="py-8 px-4 text-center">
+                    <div className="flex flex-col items-center gap-1">
+                      <span className={`text-base font-bold ${product.stock > 0 ? 'text-primary' : 'text-destructive'}`}>
+                        {product.stock.toString().padStart(2, '0')}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Link
-                          href={`/admin/products/${product.id}`}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded transition"
-                        >
-                          <Edit className="w-5 h-5" />
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(product.id)}
-                          disabled={deletingId === product.id}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded transition disabled:opacity-50"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <span className="text-[8px] font-bold tracking-tighter text-muted-foreground uppercase">AVAILABLE</span>
+                    </div>
+                  </td>
+                  <td className="py-8 px-4 text-right">
+                    <span className="text-xl font-serif tracking-tighter text-primary">
+                      ${product.price.toFixed(2)}
+                    </span>
+                  </td>
+                  <td className="py-8 pl-6 text-right">
+                    <div className="flex justify-end gap-3 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-700">
+                      <Link
+                        href={`/admin/products/${product.id}`}
+                        className="p-3 border border-border/40 bg-white hover:bg-primary hover:text-white transition-all duration-500 shadow-soft"
+                        title="Edit Product"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(product.id)}
+                        disabled={deletingId === product.id}
+                        className="p-3 border border-destructive/20 bg-white text-destructive hover:bg-destructive hover:text-white transition-all duration-500 shadow-soft disabled:opacity-50"
+                        title="Delete Product"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <Link
+                        href={`/products/${product.id}`}
+                        className="p-3 border border-border/40 bg-white text-primary hover:bg-muted transition-all duration-500 shadow-soft"
+                        title="Preview in Store"
+                        target="_blank"
+                      >
+                        <ArrowUpRight className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
