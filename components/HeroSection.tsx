@@ -15,7 +15,7 @@ export default function HeroSection() {
         className="absolute inset-0"
       >
         <Image
-          src="/HeroSection.PNG"
+          src="/HeroSection.png"
           alt="Premium Collection"
           fill
           priority
@@ -69,7 +69,7 @@ export default function HeroSection() {
       >
         <div className="relative w-[180px] bg-white/10 backdrop-blur-xl border border-white/20 p-4 shadow-2xl rounded-sm">
           <div className="relative w-[120px] h-[180px] m-auto overflow-hidden mb-4">
-            <Image src="/1.JPG" alt="Trending" fill className="object-cover hover:scale-110 transition-transform duration-700" />
+            <Image src="/1.jpg" alt="Trending" fill className="object-cover hover:scale-110 transition-transform duration-700" />
           </div>
           <div className="flex justify-center  items-center gap-2">
             <div>

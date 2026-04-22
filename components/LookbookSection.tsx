@@ -5,12 +5,12 @@ import Image from 'next/image';
 import { useRef } from 'react';
 
 const images = [
-  { src: '/Hero.PNG', alt: 'Luxury Cap 1', className: 'w-full aspect-[3/4] md:translate-y-12' },
-  { src: '/Hero1.PNG', alt: 'Luxury Cap 2', className: 'w-full aspect-square md:-translate-y-12' },
-  { src: '/Hero2.PNG', alt: 'Luxury Cap 3', className: 'w-full aspect-[4/5] md:translate-y-24' },
-  { src: '/Hero3.PNG', alt: 'Luxury Cap 4', className: 'w-full aspect-[16/9] md:col-span-2' },
-  { src: '/Hero4.PNG', alt: 'Luxury Cap 5', className: 'w-full aspect-[3/4] md:-translate-y-12' },
-  { src: '/Hero5.PNG', alt: 'Luxury Cap 6', className: 'w-full aspect-square md:translate-y-8' },
+  { src: '/Hero.png', alt: 'Luxury Cap 1', className: 'w-full aspect-[3/4] md:translate-y-12' },
+  { src: '/Hero1.png', alt: 'Luxury Cap 2', className: 'w-full aspect-square md:-translate-y-12' },
+  { src: '/Hero2.png', alt: 'Luxury Cap 3', className: 'w-full aspect-[4/5] md:translate-y-24' },
+  { src: '/Hero3.png', alt: 'Luxury Cap 4', className: 'w-full aspect-[16/9] md:col-span-2' },
+  { src: '/Hero4.png', alt: 'Luxury Cap 5', className: 'w-full aspect-[3/4] md:-translate-y-12' },
+  { src: '/Hero5.png', alt: 'Luxury Cap 6', className: 'w-full aspect-square md:translate-y-8' },
 ];
 
 export default function LookbookSection() {

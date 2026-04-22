@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRef } from 'react';
 
 const categories = [
-  { name: 'Core Architecture', id: 'core', image: '/Hero6.PNG' },
+  { name: 'Core Architecture', id: 'core', image: '/Hero6.png' },
   { name: 'Structural Beanies', id: 'beanies', image: '/7.jpeg' },
 ];
 
