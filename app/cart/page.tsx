@@ -149,6 +149,11 @@ export default function CartPage() {
                           {product.name}
                         </Link>
                         <p className="text-[#5e5e5e] text-[10px] font-mono tracking-widest uppercase mt-2">{product.category}</p>
+                        {item.selectedSize && (
+                          <p className="text-[#5e5e5e] text-[10px] font-mono tracking-widest uppercase mt-2">
+                            Size: <span className="text-[#000000] font-bold">{item.selectedSize}</span>
+                          </p>
+                        )}
                       </div>
 
                       <div className="flex items-center gap-6 mt-6">
@@ -158,7 +163,8 @@ export default function CartPage() {
                             onClick={() =>
                               updateCartItem(
                                 item.productId,
-                                Math.max(1, item.quantity - 1)
+                                Math.max(1, item.quantity - 1),
+                                item.selectedSize
                               )
                             }
                             className="p-2 transition-colors duration-300 hover:text-[#000000]"
@@ -173,7 +179,8 @@ export default function CartPage() {
                             onChange={(e) =>
                               updateCartItem(
                                 item.productId,
-                                Math.max(1, parseInt(e.target.value) || 1)
+                                Math.max(1, parseInt(e.target.value) || 1),
+                                item.selectedSize
                               )
                             }
                             className="w-8 text-center text-xs font-mono tracking-widest bg-transparent text-[#000000] outline-none"
@@ -182,7 +189,8 @@ export default function CartPage() {
                             onClick={() =>
                               updateCartItem(
                                 item.productId,
-                                Math.min(product.stock, item.quantity + 1)
+                                Math.min(product.stock, item.quantity + 1),
+                                item.selectedSize
                               )
                             }
                             className="p-2 transition-colors duration-300 hover:text-[#000000]"
@@ -193,7 +201,7 @@ export default function CartPage() {
 
                         {/* Remove Button */}
                         <button
-                          onClick={() => removeFromCart(item.productId)}
+                          onClick={() => removeFromCart(item.productId, item.selectedSize)}
                           className="text-[#ba1a1a] hover:text-black transition-colors duration-500 flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest"
                         >
                           <Trash2 className="w-3 h-3" />
@@ -205,10 +213,10 @@ export default function CartPage() {
                     {/* Price */}
                     <div className="text-right flex-shrink-0 flex flex-col justify-between pt-1">
                       <div className="text-lg font-mono text-[#000000] tracking-wide">
-                        ${(product.price * item.quantity).toFixed(2)}
+                        PKR {(product.price * item.quantity).toFixed(2)}
                       </div>
                       <p className="text-[10px] uppercase font-mono tracking-widest text-[#5e5e5e]">
-                        ${product.price.toFixed(2)} / UNIT
+                        PKR {product.price.toFixed(2)} / UNIT
                       </p>
                     </div>
                   </div>

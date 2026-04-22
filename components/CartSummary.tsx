@@ -24,7 +24,7 @@ export default function CartSummary({ showCheckoutButton = true }: CartSummaryPr
       <div className="p-8 space-y-6 border-b border-[#e8e8e8] text-xs font-mono tracking-widest text-[#474747] uppercase">
         <div className="flex justify-between items-center">
           <span className="text-[#474747]">Subtotal ({items.length} {items.length === 1 ? 'UNIT' : 'UNITS'})</span>
-          <span className="text-[#000000]">${total.toFixed(2)}</span>
+          <span className="text-[#000000]">PKR {total.toFixed(2)}</span>
         </div>
 
         <div className="flex justify-between items-center">
@@ -39,18 +39,35 @@ export default function CartSummary({ showCheckoutButton = true }: CartSummaryPr
                 COMPLIMENTARY
               </span>
             ) : (
-              <span className="text-[#000000]">${shippingCost.toFixed(2)}</span>
+              <span className="text-[#000000]">PKR {shippingCost.toFixed(2)}</span>
             )}
           </div>
         </div>
       </div>
 
+      {/* Variant Preview */}
+      {items.length > 0 && (
+        <div className="p-8 border-b border-[#e8e8e8] bg-[#ffffff] space-y-4">
+          <p className="text-[10px] font-mono tracking-widest uppercase text-[#474747]">Selected Variants</p>
+          <div className="space-y-3">
+            {items.map((item, index) => (
+              <div key={`${item.productId}-${item.selectedSize || 'default'}-${index}`} className="flex items-center justify-between text-[10px] font-mono tracking-widest uppercase text-[#1a1c1c]">
+                <span>Unit {String(index + 1).padStart(2, '0')}</span>
+                <span>
+                  Size: <span className="text-[#000000] font-bold">{item.selectedSize || 'N/A'}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Total */}
-      <div className="p-8 border-b border-[#e8e8e8] bg-[#f9f9f9]">
+      <div className="p-8 border-b border-[#e8e8e8] bg-background">
         <div className="flex justify-between items-end">
           <span className="text-xs font-mono tracking-widest text-[#474747] uppercase">Final Amount</span>
           <span className="text-3xl font-mono text-[#000000]">
-            ${finalTotal.toFixed(2)}
+            PKR {finalTotal.toFixed(2)}
           </span>
         </div>
       </div>
@@ -69,14 +86,14 @@ export default function CartSummary({ showCheckoutButton = true }: CartSummaryPr
 
         <Link
           href="/products"
-          className="w-full flex items-center justify-center px-6 py-4 border border-[#e8e8e8] text-[#5e5e5e] text-[10px] font-mono tracking-widest uppercase transition-all duration-700 hover:border-[#000000] hover:text-[#000000]"
+          className="w-full flex items-center justify-center px-6 py-4 border border-[#e8e8e8] text-muted-foreground text-[10px] font-mono tracking-widest uppercase transition-all duration-700 hover:border-[#000000] hover:text-[#000000]"
         >
           Resume Browsing
         </Link>
       </div>
 
       {/* Security Badge */}
-      <div className="px-8 py-6 bg-[#f3f3f3] flex items-center justify-center gap-3 text-[10px] font-mono tracking-widest uppercase text-[#5e5e5e] mt-auto">
+      <div className="px-8 py-6 bg-[#f3f3f3] flex items-center justify-center gap-3 text-[10px] font-mono tracking-widest uppercase text-muted-foreground mt-auto">
         <Lock className="w-3 h-3 text-[#1a1c1c]" />
         <span>Hardware Encrypted Tunnel</span>
       </div>

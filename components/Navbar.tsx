@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { auth } from '@/lib/firebase';
-import { User as FirebaseUser } from 'firebase/auth';
+import { User as FirebaseUser, onAuthStateChanged } from 'firebase/auth';
 import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
@@ -27,6 +27,17 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const isRealUser = Boolean(user && !user.isAnonymous);
+  const userInitial = user?.email?.trim().charAt(0).toUpperCase() || '';
 
   return (
     <nav
@@ -64,12 +75,13 @@ export default function Navbar() {
               )}
             </Link>
 
-            {user ? (
+            {isRealUser ? (
               <Link
                 href="/logout"
-                className="transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] text-[10px] uppercase tracking-widest hidden sm:flex items-center text-muted-foreground hover:text-[#000000]"
+                title={user?.email || 'Logged in user'}
+                className="hidden sm:flex items-center justify-center w-9 h-9 rounded-none border border-[#e8e8e8] bg-[#ffffff] text-[#1a1c1c] font-serif text-sm tracking-widest transition-all duration-700 hover:bg-[#000000] hover:text-[#ffffff] hover:border-[#000000]"
               >
-                <span>Logout</span>
+                {userInitial || 'U'}
               </Link>
             ) : (
               <Link
@@ -95,8 +107,12 @@ export default function Navbar() {
             <MobileNavLink href="/" label="HOME" onClick={() => setIsMobileMenuOpen(false)} />
             <MobileNavLink href="/about" label="OUR CRAFT" onClick={() => setIsMobileMenuOpen(false)} />
             <MobileNavLink href="/products" label="THE COLLECTION" onClick={() => setIsMobileMenuOpen(false)} />
-            {user ? (
-              <MobileNavLink href="/logout" label="LOGOUT" onClick={() => setIsMobileMenuOpen(false)} />
+            {isRealUser ? (
+              <MobileNavLink
+                href="/logout"
+                label={user?.email?.charAt(0).toUpperCase() || 'U'}
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
             ) : (
               <MobileNavLink href="/login" label="CLIENT LOGIN" onClick={() => setIsMobileMenuOpen(false)} />
             )}

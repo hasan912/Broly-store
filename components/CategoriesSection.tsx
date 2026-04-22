@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { useRef } from 'react';
 
 const categories = [
-  { name: 'Core Architecture', id: 'core', image: '/Hero1.jpeg' },
-  { name: 'Structural Beanies', id: 'beanies', image: '/Hero2.jpeg' },
+  { name: 'Core Architecture', id: 'core', image: '/Hero6.PNG' },
+  { name: 'Structural Beanies', id: 'beanies', image: '/7.jpeg' },
 ];
 
 export default function CategoriesSection() {

@@ -1,3 +1,9 @@
+export interface ProductSizeGuideRow {
+  size: string;
+  chest: string;
+  length: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -7,6 +13,8 @@ export interface Product {
   images?: string[];
   category: string;
   stock: number;
+  sizes?: string[];
+  sizeGuide?: ProductSizeGuideRow[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,6 +23,7 @@ export interface CartItem {
   productId: string;
   quantity: number;
   price: number;
+  selectedSize?: string;
 }
 
 export interface Order {

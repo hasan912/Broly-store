@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProductSchema, ProductFormData } from '@/lib/validation';
-import { Product } from '@/lib/types';
+import { Product, ProductSizeGuideRow } from '@/lib/types';
 import { getCategories, createCategory, deleteCategory } from '@/lib/admin-products';
-import { Upload, Plus, Trash2, X } from 'lucide-react';
+import { Upload, Plus, Trash2, X, Check } from 'lucide-react';
 
 interface AdminProductFormProps {
   product?: Product;
@@ -30,6 +30,24 @@ function buildInitialImageSlots(product?: Product): Array<File | string | null> 
   return slots;
 }
 
+const defaultSizeGuideRows: ProductSizeGuideRow[] = [
+  { size: 'Small', chest: '20 in', length: '28 in' },
+  { size: 'Medium', chest: '22 in', length: '29 in' },
+  { size: 'Large', chest: '24 in', length: '30 in' },
+];
+
+function buildInitialSizeGuideRows(product?: Product): ProductSizeGuideRow[] {
+  if (product?.sizeGuide && product.sizeGuide.length > 0) {
+    return product.sizeGuide.map((row) => ({
+      size: row.size || '',
+      chest: row.chest || '',
+      length: row.length || '',
+    }));
+  }
+
+  return defaultSizeGuideRows;
+}
+
 export default function AdminProductForm({
   product,
   onSubmit,
@@ -48,6 +66,12 @@ export default function AdminProductForm({
   const [newCategoryName, setNewCategoryName] = useState('');
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [categoryActionLoading, setCategoryActionLoading] = useState(false);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>(product?.sizes || []);
+  const [sizeGuideRows, setSizeGuideRows] = useState<ProductSizeGuideRow[]>(() =>
+    buildInitialSizeGuideRows(product)
+  );
+
+  const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
 
   const {
     register,
@@ -62,6 +86,8 @@ export default function AdminProductForm({
       price: product?.price || 0,
       category: product?.category || '',
       stock: product?.stock || 0,
+      sizes: product?.sizes || [],
+      sizeGuide: buildInitialSizeGuideRows(product),
     },
   });
 
@@ -198,6 +224,16 @@ export default function AdminProductForm({
       }
 
       setValue('category', data.category, { shouldValidate: true });
+      data.sizes = selectedSizes.length > 0 ? selectedSizes : undefined;
+      setValue('sizes', selectedSizes, { shouldValidate: true });
+      data.sizeGuide = sizeGuideRows
+        .map((row) => ({
+          size: row.size.trim(),
+          chest: row.chest.trim(),
+          length: row.length.trim(),
+        }))
+        .filter((row) => row.size && row.chest && row.length);
+      setValue('sizeGuide', data.sizeGuide, { shouldValidate: true });
 
       const selectedImages = imageSlots.filter(
         (image): image is File | string => Boolean(image)
@@ -231,7 +267,7 @@ export default function AdminProductForm({
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="aspect-[3/4] relative group overflow-hidden border border-border/40 bg-muted/30">
+            <div key={index} className="aspect-3/4 relative group overflow-hidden border border-border/40 bg-muted/30">
               {imagePreviews[index] ? (
                 <div className="w-full h-full relative">
                   <img
@@ -447,7 +483,122 @@ export default function AdminProductForm({
 
       <div className="h-px bg-border/40 w-full" />
 
-      {/* Submit Button */}
+      {/* Sizes Section */}
+      <div>
+        <h3 className="text-[10px] font-bold tracking-[0.3em] text-primary uppercase mb-8">Available Sizes</h3>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          {sizeOptions.map((size) => (
+            <button
+              key={size}
+              type="button"
+              onClick={() => {
+                setSelectedSizes((prev) =>
+                  prev.includes(size)
+                    ? prev.filter((s) => s !== size)
+                    : [...prev, size]
+                );
+              }}
+              className={`py-3 px-4 text-[11px] font-bold tracking-widest border-2 transition-all duration-300 uppercase flex items-center justify-center gap-2 ${
+                selectedSizes.includes(size)
+                  ? 'bg-primary text-white border-primary'
+                  : 'bg-transparent text-muted-foreground border-border/60 hover:border-primary hover:text-primary'
+              }`}
+            >
+              {size}
+              {selectedSizes.includes(size) && <Check className="w-3 h-3" />}
+            </button>
+          ))}
+        </div>
+        <p className="text-[9px] text-muted-foreground mt-4 tracking-wide">
+          {selectedSizes.length === 0
+            ? 'No sizes selected'
+            : `Selected: ${selectedSizes.join(', ')}`}
+        </p>
+      </div>
+
+      <div className="h-px bg-border/40 w-full" />
+
+      <div>
+        <div className="flex items-center justify-between mb-8">
+          <h3 className="text-[10px] font-bold tracking-[0.3em] text-primary uppercase">Size Measurement Table</h3>
+          <button
+            type="button"
+            onClick={() =>
+              setSizeGuideRows((prev) => [...prev, { size: '', chest: '', length: '' }])
+            }
+            className="inline-flex items-center gap-2 px-4 py-2 text-[10px] font-bold tracking-widest border border-border/60 text-muted-foreground hover:border-primary hover:text-primary transition-all duration-500 uppercase"
+          >
+            <Plus className="w-3 h-3" />
+            Add Row
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {sizeGuideRows.map((row, index) => (
+            <div key={`${row.size}-${index}`} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-3 items-center">
+              <input
+                type="text"
+                value={row.size}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSizeGuideRows((prev) =>
+                    prev.map((guideRow, rowIndex) =>
+                      rowIndex === index ? { ...guideRow, size: value } : guideRow
+                    )
+                  );
+                }}
+                placeholder="Size (e.g. Small)"
+                className="w-full bg-transparent border border-border/60 px-4 py-3 text-xs font-bold tracking-wider text-primary focus:outline-none focus:border-primary transition-colors"
+              />
+              <input
+                type="text"
+                value={row.chest}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSizeGuideRows((prev) =>
+                    prev.map((guideRow, rowIndex) =>
+                      rowIndex === index ? { ...guideRow, chest: value } : guideRow
+                    )
+                  );
+                }}
+                placeholder="Chest (e.g. 22 in)"
+                className="w-full bg-transparent border border-border/60 px-4 py-3 text-xs font-bold tracking-wider text-primary focus:outline-none focus:border-primary transition-colors"
+              />
+              <input
+                type="text"
+                value={row.length}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSizeGuideRows((prev) =>
+                    prev.map((guideRow, rowIndex) =>
+                      rowIndex === index ? { ...guideRow, length: value } : guideRow
+                    )
+                  );
+                }}
+                placeholder="Length (e.g. 29 in)"
+                className="w-full bg-transparent border border-border/60 px-4 py-3 text-xs font-bold tracking-wider text-primary focus:outline-none focus:border-primary transition-colors"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (sizeGuideRows.length <= 1) return;
+                  setSizeGuideRows((prev) => prev.filter((_, rowIndex) => rowIndex !== index));
+                }}
+                disabled={sizeGuideRows.length <= 1}
+                className="px-4 py-3 border border-destructive/30 text-destructive text-[10px] font-bold tracking-widest uppercase hover:bg-destructive hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+        <p className="text-[9px] text-muted-foreground mt-4 tracking-wide uppercase">
+          This table appears on the product detail page.
+        </p>
+      </div>
+
+      <div className="h-px bg-border/40 w-full" />
       <div className="flex justify-end pt-8">
         <button
           type="submit"

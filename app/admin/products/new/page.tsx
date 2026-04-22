@@ -22,6 +22,8 @@ export default function NewProductPage() {
           price: data.price,
           category: data.category,
           stock: data.stock,
+          sizes: data.sizes,
+          sizeGuide: data.sizeGuide,
           image: '',
         },
         imageInputs

@@ -233,14 +233,19 @@ export default function OrderConfirmationPage() {
                       <div>
                         <p className="font-serif text-lg text-[#000000]">{product.name}</p>
                         <p className="text-[10px] font-mono tracking-widest uppercase text-[#5e5e5e] mt-1">VOL: {item.quantity}</p>
+                        {item.selectedSize && (
+                          <p className="text-[10px] font-mono tracking-widest uppercase text-[#5e5e5e] mt-1">
+                            Size: <span className="text-[#000000] font-bold">{item.selectedSize}</span>
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="text-right flex flex-col justify-between py-2">
                       <p className="font-mono text-lg text-[#000000]">
-                        ${(product.price * item.quantity).toFixed(2)}
+                        PKR {(product.price * item.quantity).toFixed(2)}
                       </p>
                       <p className="text-[10px] font-mono tracking-widest uppercase text-[#5e5e5e]">
-                        ${product.price.toFixed(2)} / EA
+                        PKR {product.price.toFixed(2)} / EA
                       </p>
                     </div>
                   </div>
@@ -254,18 +259,18 @@ export default function OrderConfirmationPage() {
             <div className="space-y-4 mb-6 pb-6 border-b border-[#e8e8e8]">
               <div className="flex justify-between text-[10px] font-mono tracking-widest uppercase">
                 <span className="text-[#5e5e5e]">Subtotal</span>
-                <span className="text-[#000000]">${order.total.toFixed(2)}</span>
+                <span className="text-[#000000]">PKR {order.total.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-[10px] font-mono tracking-widest uppercase">
                 <span className="text-[#5e5e5e]">
                   Logistics {shippingCost === 0 && <span className="text-[#000000] font-semibold">(COMPLIMENTARY)</span>}
                 </span>
-                <span className="text-[#000000]">${shippingCost.toFixed(2)}</span>
+                <span className="text-[#000000]">PKR {shippingCost.toFixed(2)}</span>
               </div>
             </div>
             <div className="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
               <span className="font-semibold text-[#000000]">Final Amount</span>
-              <span className="text-3xl font-mono text-[#000000]">${finalTotal.toFixed(2)}</span>
+              <span className="text-3xl font-mono text-[#000000]">PKR {finalTotal.toFixed(2)}</span>
             </div>
           </div>
         </div>

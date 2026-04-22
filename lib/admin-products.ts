@@ -26,14 +26,35 @@ function toCategoryKey(name: string): string {
     .replace(/^-|-$/g, '');
 }
 
-// Convert File to base64 string
-async function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
+async function uploadImageToSupabase(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch('/api/admin/upload-image', {
+    method: 'POST',
+    body: formData,
   });
+
+  if (!response.ok) {
+    let errorMessage = 'Failed to upload image.';
+    try {
+      const payload = await response.json();
+      if (typeof payload?.error === 'string' && payload.error) {
+        errorMessage = payload.error;
+      }
+    } catch {
+      // Keep default message when response isn't JSON.
+    }
+
+    throw new Error(errorMessage);
+  }
+
+  const payload = await response.json();
+  if (typeof payload?.url !== 'string' || !payload.url) {
+    throw new Error('Upload succeeded but no image URL was returned.');
+  }
+
+  return payload.url;
 }
 
 async function normalizeImages(
@@ -47,7 +68,8 @@ async function normalizeImages(
   const normalized = await Promise.all(
     imageInputs.map(async (imageInput) => {
       if (typeof imageInput === 'string') return imageInput;
-      return fileToBase64(imageInput);
+
+      return uploadImageToSupabase(imageInput);
     })
   );
 
@@ -207,9 +229,12 @@ export async function getCategories(): Promise<string[]> {
         const data = categoryDoc.data() as { name?: string };
         addCategory(data.name);
       });
-    } catch (categoryError) {
+    } catch (categoryError: any) {
       // If categories collection is unavailable, still show categories inferred from products.
-      console.warn('Unable to read categories collection, falling back to product categories only.', categoryError);
+      const code = categoryError?.code;
+      if (code !== 'permission-denied' && code !== 'missing-or-insufficient-permissions') {
+        console.warn('Unable to read categories collection, falling back to product categories only.', categoryError);
+      }
     }
 
     productsSnapshot.forEach((productDoc) => {

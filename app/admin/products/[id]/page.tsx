@@ -44,6 +44,8 @@ export default function EditProductPage() {
           price: data.price,
           category: data.category,
           stock: data.stock,
+          sizes: data.sizes,
+          sizeGuide: data.sizeGuide,
           images: product?.images,
           image: product?.image || '',
         },
@@ -62,7 +64,7 @@ export default function EditProductPage() {
     return (
       <div className="p-8 md:p-16 flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-6">
-          <div className="w-16 h-[1px] bg-primary/20 relative overflow-hidden">
+          <div className="w-16 h-px bg-primary/20 relative overflow-hidden">
              <div className="absolute inset-0 bg-primary animate-slide-right" />
           </div>
           <p className="text-[10px] font-bold tracking-[0.3em] text-muted-foreground uppercase">Accessing Repository</p>

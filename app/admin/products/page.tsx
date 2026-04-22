@@ -151,7 +151,7 @@ export default function AdminProductsPage() {
                   </td>
                   <td className="py-8 px-4 text-right">
                     <span className="text-xl font-serif tracking-tighter text-primary">
-                      ${product.price.toFixed(2)}
+                      PKR {product.price.toFixed(2)}
                     </span>
                   </td>
                   <td className="py-8 pl-6 text-right">

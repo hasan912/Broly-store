@@ -69,7 +69,7 @@ export default function OrderDetailPage() {
     return (
       <div className="p-8 md:p-16 flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-6">
-          <div className="w-16 h-[1px] bg-primary/20 relative overflow-hidden">
+          <div className="w-16 h-px bg-primary/20 relative overflow-hidden">
              <div className="absolute inset-0 bg-primary animate-slide-right" />
           </div>
           <p className="text-[10px] font-bold tracking-[0.3em] text-muted-foreground uppercase">Decrypting Order Data</p>
@@ -172,11 +172,16 @@ export default function OrderDetailPage() {
                     <div className="flex-1">
                       <p className="text-xl font-serif tracking-tight text-primary mb-1">{product.name}</p>
                       <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">QUANTITY: {item.quantity.toString().padStart(2, '0')}</p>
+                      {item.selectedSize && (
+                        <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mt-2">
+                          SIZE: <span className="text-primary">{item.selectedSize}</span>
+                        </p>
+                      )}
                     </div>
                     <div className="text-right">
                       <p className="text-[10px] font-bold tracking-widest text-muted-foreground mb-1 uppercase">UNIT PRICE</p>
                       <p className="text-2xl font-serif tracking-tighter text-primary">
-                        ${(product.price * item.quantity).toFixed(2)}
+                        PKR {(product.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -244,18 +249,18 @@ export default function OrderDetailPage() {
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center text-[10px] font-bold tracking-widest">
                   <span className="text-muted-foreground uppercase">SUBTOTAL</span>
-                  <span className="text-primary">${order.total.toFixed(2)}</span>
+                  <span className="text-primary">PKR {order.total.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center text-[10px] font-bold tracking-widest">
                   <span className="text-muted-foreground uppercase">LOGISTICS</span>
-                  <span className="text-primary">${shippingCost.toFixed(2)}</span>
+                  <span className="text-primary">PKR {shippingCost.toFixed(2)}</span>
                 </div>
               </div>
 
               <div className="flex justify-between items-end pt-6 border-t border-border/60">
                 <span className="text-[10px] font-extrabold tracking-[0.3em] text-primary uppercase">GRAND TOTAL</span>
                 <span className="text-3xl font-serif tracking-tighter text-primary">
-                  ${finalTotal.toFixed(2)}
+                  PKR {finalTotal.toFixed(2)}
                 </span>
               </div>
             </div>

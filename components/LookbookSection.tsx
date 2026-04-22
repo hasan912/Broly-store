@@ -5,12 +5,12 @@ import Image from 'next/image';
 import { useRef } from 'react';
 
 const images = [
-  { src: '/Hero1.jpeg', alt: 'Luxury Cap 1', className: 'w-full aspect-[3/4] md:translate-y-12' },
-  { src: '/Hero2.jpeg', alt: 'Luxury Cap 2', className: 'w-full aspect-square md:-translate-y-12' },
-  { src: '/Hero3.jpeg', alt: 'Luxury Cap 3', className: 'w-full aspect-[4/5] md:translate-y-24' },
-  { src: '/Hero4.jpeg', alt: 'Luxury Cap 4', className: 'w-full aspect-[16/9] md:col-span-2' },
-  { src: '/Hero5.jpeg', alt: 'Luxury Cap 5', className: 'w-full aspect-[3/4] md:-translate-y-12' },
-  { src: '/Hero6.jpeg', alt: 'Luxury Cap 6', className: 'w-full aspect-square md:translate-y-8' },
+  { src: '/Hero.PNG', alt: 'Luxury Cap 1', className: 'w-full aspect-[3/4] md:translate-y-12' },
+  { src: '/Hero1.PNG', alt: 'Luxury Cap 2', className: 'w-full aspect-square md:-translate-y-12' },
+  { src: '/Hero2.PNG', alt: 'Luxury Cap 3', className: 'w-full aspect-[4/5] md:translate-y-24' },
+  { src: '/Hero3.PNG', alt: 'Luxury Cap 4', className: 'w-full aspect-[16/9] md:col-span-2' },
+  { src: '/Hero4.PNG', alt: 'Luxury Cap 5', className: 'w-full aspect-[3/4] md:-translate-y-12' },
+  { src: '/Hero5.PNG', alt: 'Luxury Cap 6', className: 'w-full aspect-square md:translate-y-8' },
 ];
 
 export default function LookbookSection() {
@@ -31,7 +31,7 @@ export default function LookbookSection() {
         style={{ y: textY }}
         className="absolute top-1/4 -left-20 text-[15rem] font-serif font-black text-white/5 whitespace-nowrap pointer-events-none select-none uppercase transition-opacity duration-1000"
       >
-        Collection 2025
+        Collection 2026
       </motion.div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
@@ -61,7 +61,7 @@ export default function LookbookSection() {
             className="max-w-md"
           >
             <p className="text-gray-400 font-sans text-lg leading-relaxed mb-8">
-              Explore Broly Store curation in urban and architectural contexts. A dialogue between high-end construction and everyday expression.
+             An exclusive visual journey through high-performance apparel and intricate design. Redefining the aesthetic of football culture.
             </p>
             <div className="h-[1px] w-24 bg-gray-500" />
           </motion.div>
@@ -76,21 +76,21 @@ export default function LookbookSection() {
             y={imageY1} 
             index={0} 
             title="Structural" 
-            desc="Model 01 — Urban Gray" 
+            desc="Model 01 — Heritage in Motion" 
           />
           <LookbookItem 
             {...images[1]} 
             y={imageY2} 
             index={1} 
             title="Perspective" 
-            desc="Model 02 — Obsidian Black" 
+            desc="Model 02 — Unleash the Mythic." 
           />
           <LookbookItem 
             {...images[2]} 
             y={imageY1} 
             index={2} 
             title="Form" 
-            desc="Model 03 — Concrete" 
+            desc="Model 03 — Royal Ember" 
           />
 
           {/* Row 2 - Feature Section */}
@@ -124,7 +124,7 @@ export default function LookbookSection() {
                   transition={{ delay: 0.6 }}
                   className="text-5xl font-serif italic text-white"
                 >
-                  Architectural Synthesis
+                  The Next Era
                 </motion.h3>
              </div>
           </div>
@@ -155,7 +155,7 @@ export default function LookbookSection() {
             y={imageY2} 
             index={4} 
             title="Ethereal" 
-            desc="Model 04 — Desert Sand" 
+            desc="Model 04 — Midnight Precision." 
           />
           <div className="lg:col-span-1" /> {/* Spacer */}
           <LookbookItem 
@@ -163,7 +163,7 @@ export default function LookbookSection() {
             y={imageY1} 
             index={5} 
             title="Minimalist" 
-            desc="Model 05 — Pearl White" 
+            desc="Model 05 — Frost & Fire." 
           />
 
         </div>

@@ -6,9 +6,9 @@ import * as cartUtils from '@/lib/cart';
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (productId: string, quantity: number, price: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateCartItem: (productId: string, quantity: number) => void;
+  addToCart: (productId: string, quantity: number, price: number, selectedSize?: string) => void;
+  removeFromCart: (productId: string, selectedSize?: string) => void;
+  updateCartItem: (productId: string, quantity: number, selectedSize?: string) => void;
   clearCart: () => void;
   total: number;
   itemCount: number;
@@ -26,18 +26,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setMounted(true);
   }, []);
 
-  const handleAddToCart = (productId: string, quantity: number, price: number) => {
-    const updatedCart = cartUtils.addToCart(productId, quantity, price);
+  const handleAddToCart = (productId: string, quantity: number, price: number, selectedSize?: string) => {
+    const updatedCart = cartUtils.addToCart(productId, quantity, price, selectedSize);
     setItems(updatedCart);
   };
 
-  const handleRemoveFromCart = (productId: string) => {
-    const updatedCart = cartUtils.removeFromCart(productId);
+  const handleRemoveFromCart = (productId: string, selectedSize?: string) => {
+    const updatedCart = cartUtils.removeFromCart(productId, selectedSize);
     setItems(updatedCart);
   };
 
-  const handleUpdateCartItem = (productId: string, quantity: number) => {
-    const updatedCart = cartUtils.updateCartItem(productId, quantity);
+  const handleUpdateCartItem = (productId: string, quantity: number, selectedSize?: string) => {
+    const updatedCart = cartUtils.updateCartItem(productId, quantity, selectedSize);
     setItems(updatedCart);
   };
 

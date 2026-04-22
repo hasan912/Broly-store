@@ -32,6 +32,16 @@ export const ProductSchema = z.object({
   price: z.number().min(0, 'Price must be greater than 0'),
   category: z.string().min(1, 'Category is required'),
   stock: z.number().min(0, 'Stock must be 0 or greater'),
+  sizes: z.array(z.string()).optional(),
+  sizeGuide: z
+    .array(
+      z.object({
+        size: z.string().min(1, 'Size is required'),
+        chest: z.string().min(1, 'Chest measurement is required'),
+        length: z.string().min(1, 'Length measurement is required'),
+      })
+    )
+    .optional(),
 });
 
 export type RegisterFormData = z.infer<typeof RegisterSchema>;

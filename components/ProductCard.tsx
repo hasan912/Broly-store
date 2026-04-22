@@ -16,6 +16,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {
+    if (product.stock <= 0) return;
     e.preventDefault();
     e.stopPropagation();
     addToCart(product.id, 1, product.price);
@@ -28,6 +29,11 @@ export default function ProductCard({ product }: ProductCardProps) {
       >
         {/* Image Container */}
         <div className="relative w-full aspect-4/5 overflow-hidden bg-[#f4f4f4] mb-4">
+          {product.stock <= 0 && (
+            <span className="absolute top-3 left-3 z-20 text-[10px] font-mono tracking-widest text-[#ffffff] uppercase bg-[#000000] px-2 py-1">
+              Out of Stock
+            </span>
+          )}
           {product.image.startsWith('data:') ? (
             <img
               src={product.image}
@@ -53,7 +59,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </span>
               ) : (
                 <span className="text-[10px] font-mono tracking-widest text-[#ffffff] uppercase bg-[#000000] px-2 py-1">
-                  Sold Out
+                  Out of Stock
                 </span>
               )}
 
@@ -103,7 +109,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           <div className="mt-auto pt-2">
             <span className="text-sm font-sans font-medium text-[#000000]">
-              ${product.price.toFixed(2)}
+              PKR {product.price.toFixed(2)}
             </span>
           </div>
         </div>

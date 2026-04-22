@@ -20,6 +20,7 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState<string>('');
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<'description' | 'reviews'>('description');
@@ -103,7 +104,11 @@ export default function ProductDetailPage() {
   }
 
   const handleAddToCart = () => {
-    addToCart(product.id, quantity, product.price);
+    if (product?.sizes && product.sizes.length > 0 && !selectedSize) {
+      alert('Please select a size before adding to cart');
+      return;
+    }
+    addToCart(product.id, quantity, product.price, selectedSize);
   };
 
   const productImages = (
@@ -168,15 +173,24 @@ export default function ProductDetailPage() {
   };
 
   const features = [
-    { icon: Truck, text: 'Free shipping on orders over $100' },
+    { icon: Truck, text: 'Free shipping on orders' },
     { icon: Shield, text: '30-day money back guarantee' },
     { icon: Check, text: 'Secure checkout' },
     { icon: Star, text: '24/7 customer support' },
   ];
 
+  const sizeGuideRows =
+    product.sizeGuide && product.sizeGuide.length > 0
+      ? product.sizeGuide
+      : [
+          { size: 'Small', chest: '20 in', length: '28 in' },
+          { size: 'Medium', chest: '22 in', length: '29 in' },
+          { size: 'Large', chest: '24 in', length: '30 in' },
+        ];
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-360 mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Breadcrumb */}
         <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>
@@ -186,27 +200,28 @@ export default function ProductDetailPage() {
           <span className="text-foreground font-medium">{product.name}</span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_0.95fr] gap-8 lg:gap-10 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-start mb-16">
           {/* Image Section */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
+            className="lg:max-w-155"
           >
-            <Card3D className="overflow-hidden p-0 group" depth="lg">
-              <div className="relative aspect-[4/3] sm:aspect-square bg-linear-to-br from-muted to-secondary">
+            <Card3D className="overflow-hidden p-0 group shadow-[0_24px_80px_rgba(0,0,0,0.08)]" depth="lg">
+              <div className="relative aspect-4/5 sm:aspect-5/6 bg-linear-to-br from-[#fafafa] via-white to-[#f2f2f2]">
                 {currentImage.startsWith('data:') ? (
                   <img
                     src={currentImage}
                     alt={product.name}
-                    className="w-full h-full object-contain p-2 group-hover:scale-[1.02] transition-transform duration-500"
+                    className="w-full h-full object-contain p-4 sm:p-6 group-hover:scale-[1.02] transition-transform duration-500"
                   />
                 ) : (
                   <Image
                     src={currentImage}
                     alt={product.name}
                     fill
-                    className="object-contain p-2 group-hover:scale-[1.02] transition-transform duration-500"
+                    className="object-contain p-4 sm:p-6 group-hover:scale-[1.02] transition-transform duration-500"
                   />
                 )}
 
@@ -246,13 +261,13 @@ export default function ProductDetailPage() {
             </Card3D>
 
             {productImages.length > 1 && (
-              <div className="grid grid-cols-4 gap-3 mt-4">
+                  <div className="grid grid-cols-4 gap-3 mt-4 max-w-130">
                 {productImages.slice(0, 4).map((image, index) => (
                   <button
                     key={`${image}-${index}`}
                     type="button"
                     onClick={() => setSelectedImageIndex(index)}
-                    className={`relative aspect-square overflow-hidden rounded-lg border bg-muted/30 transition ${
+                    className={`relative aspect-square overflow-hidden rounded-[1rem] border bg-white/80 shadow-[0_10px_30px_rgba(0,0,0,0.05)] transition ${
                       selectedImageIndex === index ? 'border-primary shadow-soft' : 'border-border hover:border-primary/50'
                     }`}
                     aria-label={`View image ${index + 1}`}
@@ -303,7 +318,7 @@ export default function ProductDetailPage() {
             {/* Price */}
             <div className="mb-6 pb-6 border-b border-border">
               <div className="text-4xl font-bold text-gradient-primary mb-3">
-                PKR    {product.price}
+                PKR {product.price.toFixed(2)}
               </div>
               <div className="flex items-center gap-2">
                 {product.stock > 0 ? (
@@ -323,7 +338,52 @@ export default function ProductDetailPage() {
               <p className="text-muted-foreground leading-relaxed">{product.description}</p>
             </div>
 
-            {/* Actions */}
+            {/* Size Selection */}
+            {product.sizes && product.sizes.length > 0 && (
+              <div className="mb-8 pb-8 border-b border-border">
+                <h2 className="text-lg font-semibold text-foreground mb-4">Select Size</h2>
+                <div className="grid grid-cols-4 gap-3 sm:grid-cols-7">
+                  {product.sizes.map((size) => (
+                    <button
+                      key={size}
+                      type="button"
+                      onClick={() => setSelectedSize(size)}
+                      className={`py-3 px-4 text-sm font-bold border-2 rounded-lg transition-all duration-300 uppercase ${
+                        selectedSize === size
+                          ? 'bg-primary text-white border-primary'
+                          : 'bg-background text-foreground border-border hover:border-primary hover:bg-secondary'
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="mb-8 border border-border/60 rounded-lg overflow-hidden">
+              <div className="px-4 py-3 bg-secondary/40 border-b border-border/60">
+                <h3 className="text-sm font-semibold text-foreground">Size Guide (Inches)</h3>
+              </div>
+              <table className="w-full text-sm">
+                <thead className="bg-background/40">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Size</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Chest</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Length</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sizeGuideRows.map((row) => (
+                    <tr key={row.size} className="border-t border-border/60">
+                      <td className="px-4 py-3 text-foreground">{row.size}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{row.chest}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{row.length}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             {product.stock > 0 && (
               <div className="space-y-4 mb-8">
                 <div className="flex items-center gap-4">

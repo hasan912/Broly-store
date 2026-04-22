@@ -63,7 +63,7 @@ export default function AdminOrdersPage() {
     return (
       <div className="p-8 md:p-16 flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-6">
-          <div className="w-16 h-[1px] bg-primary/20 relative overflow-hidden">
+          <div className="w-16 h-px bg-primary/20 relative overflow-hidden">
              <div className="absolute inset-0 bg-primary animate-slide-right" />
           </div>
           <p className="text-[10px] font-bold tracking-[0.3em] text-muted-foreground uppercase">Processing Manifests</p>
@@ -123,6 +123,12 @@ export default function AdminOrdersPage() {
                       <p className="text-[10px] text-muted-foreground tracking-wider underline underline-offset-4 decoration-border/40">
                         {order.shippingAddress.email}
                       </p>
+                      <p className="text-[10px] text-muted-foreground tracking-wider uppercase mt-1">
+                        Sizes:{' '}
+                        <span className="text-primary">
+                          {order.items.map((item) => item.selectedSize || 'N/A').join(' / ')}
+                        </span>
+                      </p>
                     </div>
                   </td>
                   <td className="py-8 px-4 text-center">
@@ -132,12 +138,12 @@ export default function AdminOrdersPage() {
                   </td>
                   <td className="py-8 px-4 text-right">
                     <span className="text-lg font-serif tracking-tighter text-primary">
-                      ${order.total.toFixed(2)}
+                      PKR {order.total.toFixed(2)}
                     </span>
                   </td>
                   <td className="py-8 px-4 whitespace-nowrap">
                     <span
-                      className={`px-4 py-1.5 border text-[10px] font-extrabold tracking-[0.1em] uppercase transition-all duration-700 ${getStatusStyle(
+                      className={`px-4 py-1.5 border text-[10px] font-extrabold tracking-widest uppercase transition-all duration-700 ${getStatusStyle(
                         order.status
                       )}`}
                     >
