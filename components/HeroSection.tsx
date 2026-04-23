@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full h-[90vh] md:h-screen overflow-hidden bg-[#0A0A0A]">
+    <section className="relative w-full h-[90vh] md:h-screen overflow-hidden">
       {/* Dynamic Background Image Array */}
       <motion.div
         initial={{ scale: 1.1, opacity: 0.5 }}
@@ -23,7 +23,7 @@ export default function HeroSection() {
           sizes="100vw"
           className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-black/20" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/5 via-transparent to-black/10" />
       </motion.div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-linear-to-t from-black via-black/20 to-transparent" />
