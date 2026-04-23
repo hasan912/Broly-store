@@ -17,7 +17,7 @@ export default function FeaturedProducts() {
     const fetchProducts = async () => {
       try {
         const allProducts = await getProducts();
-        setProducts(allProducts.slice(0, 4));
+        setProducts(allProducts.slice(0, 8));
       } catch (err) {
         setError('Failed to load products');
         console.error(err);

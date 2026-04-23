@@ -43,13 +43,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const bucket = process.env.SUPABASE_STORAGE_BUCKET || 'Product';
 
     if (!supabaseUrl || !serviceRoleKey) {
       return NextResponse.json(
-        { error: 'Supabase is not configured. Add URL and service key in environment.' },
+        {
+          error:
+            'Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL (or SUPABASE_URL) and SUPABASE_SERVICE_ROLE_KEY in the hosting environment.',
+        },
         { status: 500 }
       );
     }
