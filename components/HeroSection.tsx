@@ -15,7 +15,7 @@ export default function HeroSection() {
         className="absolute inset-0"
       >
         <Image
-          src="/herosection.png"
+          src="/HEROSECTIONs.PNG"
           alt="Premium Collection"
           fill
           priority
