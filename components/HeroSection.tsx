@@ -15,17 +15,18 @@ export default function HeroSection() {
         className="absolute inset-0"
       >
         <Image
-          src="/HeroSection.png"
+          src="/herosection.png"
           alt="Premium Collection"
           fill
           priority
-          className="object-cover object-top opacity-70"
+          quality={100}
+          sizes="100vw"
+          className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/25 via-65% to-[#e9e9e9]/45" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-black/20" />
       </motion.div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-linear-to-t from-background via-background/10 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-5 blur-xl bg-background/70" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-linear-to-t from-black via-black/20 to-transparent" />
 
       <div className="relative z-10 flex flex-col justify-center h-full max-w-7xl mx-auto px-6 lg:px-8 mt-12 md:mt-0">
         <motion.div
@@ -69,12 +70,20 @@ export default function HeroSection() {
       >
         <div className="relative w-[180px] bg-white/10 backdrop-blur-xl border border-white/20 p-4 shadow-2xl rounded-sm">
           <div className="relative w-[120px] h-[180px] m-auto overflow-hidden mb-4">
-            <Image src="/1.jpg" alt="Trending" fill className="object-cover hover:scale-110 transition-transform duration-700" />
+            <Image 
+              src="/HEROSEC.png" 
+              alt="Trending" 
+              fill 
+              quality={100}
+              sizes="(max-width: 768px) 100px, 120px"
+              loading="lazy"
+              className="object-cover hover:scale-110 transition-transform duration-700" 
+            />
           </div>
           <div className="flex justify-center  items-center gap-2">
             <div>
-              <p className="text-white font-bold font-serif text-xl">The Signature</p>
-              <p className="text-white/60 text-xs uppercase tracking-widest mt-1">Trending Unit</p>
+              <p className="text-white font-bold font-serif text-xl">Director's Cut</p>
+              <p className="text-white/60 text-xs uppercase tracking-widest mt-1">THE SIGNATURE OF EXCELLENCE</p>
             </div>
            
           </div>
