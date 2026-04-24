@@ -56,9 +56,34 @@ export default function Footer() {
           <p className="text-[10px] font-mono uppercase tracking-widest text-[#5e5e5e]">
             &copy; {new Date().getFullYear()} BROLY STORE. All rights reserved.
           </p>
+          <p className="text-[10px] font-mono uppercase tracking-widest text-[#000000] text-center border border-[#000000]/20 bg-white px-4 py-2">
+            Website designed by
+            <a
+              href="https://hasanbaig.me"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-1 font-bold underline underline-offset-4 hover:text-muted-foreground transition-colors"
+            >
+              Muhammad Hasan Baig
+            </a>
+          </p>
           <div className="flex gap-6">
-            <Link href="#" className="text-[#5e5e5e] hover:text-[#000000] text-[10px] font-mono tracking-widest uppercase transition-colors">TW / X</Link>
-            <Link href="#" className="text-[#5e5e5e] hover:text-[#000000] text-[10px] font-mono tracking-widest uppercase transition-colors">INSTA</Link>
+            <a
+              href="https://www.tiktok.com/@dripnocap_?_r=1&_t=ZS-95mag8Q5AWr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#5e5e5e] hover:text-[#000000] text-[10px] font-mono tracking-widest uppercase transition-colors"
+            >
+              TikTok
+            </a>
+            <a
+              href="https://www.instagram.com/brolystore_?igsh=amVxNDNweHY5YTVk&utm_source=qr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#5e5e5e] hover:text-[#000000] text-[10px] font-mono tracking-widest uppercase transition-colors"
+            >
+              Insta
+            </a>
           </div>
         </div>
 

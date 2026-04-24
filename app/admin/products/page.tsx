@@ -155,7 +155,7 @@ export default function AdminProductsPage() {
                     </span>
                   </td>
                   <td className="py-8 pl-6 text-right">
-                    <div className="flex justify-end gap-3 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-700">
+                    <div className="flex justify-end gap-3">
                       <Link
                         href={`/admin/products/${product.id}`}
                         className="p-3 border border-border/40 bg-white hover:bg-primary hover:text-white transition-all duration-500 shadow-soft"

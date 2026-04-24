@@ -256,7 +256,7 @@ export default function CheckoutPage() {
 
                     <div className="space-y-8">
                       <div>
-                        <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Primary Designator *</label>
+                        <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Name </label>
                         <input
                           {...register('fullName')}
                           type="text"
@@ -268,7 +268,7 @@ export default function CheckoutPage() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         <div>
-                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Comms Channel (Email) *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Email</label>
                           <input
                             {...register('email')}
                             type="email"
@@ -279,7 +279,7 @@ export default function CheckoutPage() {
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Freq Dial (Phone) *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Phone</label>
                           <input
                             {...register('phone')}
                             type="tel"
@@ -291,7 +291,7 @@ export default function CheckoutPage() {
                       </div>
 
                       <div>
-                        <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Sector Address *</label>
+                        <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Address </label>
                         <input
                           {...register('street')}
                           type="text"
@@ -303,7 +303,7 @@ export default function CheckoutPage() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         <div>
-                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">City Hub *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">City </label>
                           <input
                             {...register('city')}
                             type="text"
@@ -314,7 +314,7 @@ export default function CheckoutPage() {
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Province / State *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Province</label>
                           <input
                             {...register('state')}
                             type="text"
@@ -327,7 +327,7 @@ export default function CheckoutPage() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         <div>
-                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Zone Code *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Zone Code </label>
                           <input
                             {...register('zipCode')}
                             type="text"
@@ -338,7 +338,7 @@ export default function CheckoutPage() {
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Region *</label>
+                          <label className="block text-[10px] font-mono tracking-widest uppercase text-[#474747] mb-2">Country</label>
                           <input
                             {...register('country')}
                             type="text"
