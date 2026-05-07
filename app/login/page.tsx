@@ -33,10 +33,10 @@ export default function LoginPage() {
               <Image src="/logo.PNG" alt="Logo" width={48} height={48} className="mix-blend-multiply opacity-90" />
             </motion.div>
             <span className="text-2xl font-serif text-[#1a1c1c] tracking-widest">
-              ATELIER MONOLITH
+              
             </span>
           </Link>
-          <p className="mt-3 text-[10px] font-mono uppercase tracking-widest text-[#474747]">Welcome back. Initiate session.</p>
+          <p className="mt-3 text-[10px] font-mono uppercase tracking-widest text-[#474747]">Welcome back</p>
         </div>
 
         <Suspense fallback={

@@ -79,7 +79,7 @@ export default function CartSummary({ showCheckoutButton = true }: CartSummaryPr
             href="/checkout"
             className="group/btn relative w-full flex items-center justify-between px-6 py-4 border border-[#000000] bg-[#000000] text-[#ffffff] text-[10px] font-mono tracking-widest uppercase transition-all duration-700 hover:bg-transparent hover:text-[#000000]"
           >
-            <span>Proceed to Signature</span>
+            <span>Proceed to Checkout</span>
             <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover/btn:translate-x-1" />
           </Link>
         )}

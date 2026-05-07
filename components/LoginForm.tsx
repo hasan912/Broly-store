@@ -57,7 +57,7 @@ export default function LoginForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label className="block text-[10px] font-mono uppercase tracking-widest text-[#474747] mb-2">
-              Email Address / ID
+              Email Address
             </label>
             <input
               {...register('email')}
@@ -72,7 +72,7 @@ export default function LoginForm() {
 
           <div>
             <label className="block text-[10px] font-mono uppercase tracking-widest text-[#474747] mb-2">
-              Security Key
+              Password
             </label>
             <input
               {...register('password')}
@@ -98,7 +98,7 @@ export default function LoginForm() {
             ) : (
               <>
                 <LogIn className="w-3 h-3" />
-                AUTHORIZE SESSION
+                Login 
               </>
             )}
           </button>
@@ -106,9 +106,9 @@ export default function LoginForm() {
 
         <div className="mt-8 text-center border-t border-[#e8e8e8] pt-6">
           <p className="text-[#5e5e5e] text-[10px] font-mono uppercase tracking-widest">
-            Unregistered entity?{' '}
+            register{' '}
             <Link href={`/register?redirect=${encodeURIComponent(redirectUrl)}`} className="text-[#000000] font-semibold hover:border-b hover:border-[#000000] transition-all">
-              Initialize Profile
+              Signup
             </Link>
           </p>
         </div>
@@ -118,7 +118,7 @@ export default function LoginForm() {
             href="/"
             className="block text-center text-[#5e5e5e] hover:text-[#000000] transition-colors text-[10px] font-mono uppercase tracking-widest"
           >
-            Bypass Authentication
+            Continue as Guest
           </Link>
         </div>
       </div>

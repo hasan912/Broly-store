@@ -60,13 +60,13 @@ export default function RegisterForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label className="block text-[10px] font-mono uppercase tracking-widest text-[#474747] mb-2">
-              Full Designation
+              Name
             </label>
             <input
               {...register('name')}
               type="text"
               className="w-full px-4 py-3 bg-[#f9f9f9] border-b border-[#e8e8e8] focus:outline-none focus:border-[#000000] transition-colors text-[#000000] placeholder:text-[#ababab] font-mono text-xs rounded-none"
-              placeholder="JOHN DOE"
+              placeholder="Saad Anwar"
             />
             {errors.name && (
               <p className="text-[#ba1a1a] text-[10px] font-mono tracking-widest uppercase mt-2">{errors.name.message}</p>
@@ -75,7 +75,7 @@ export default function RegisterForm() {
 
           <div>
             <label className="block text-[10px] font-mono uppercase tracking-widest text-[#474747] mb-2">
-              Comms Contact
+              Contact
             </label>
             <input
               {...register('email')}
@@ -90,7 +90,7 @@ export default function RegisterForm() {
 
           <div>
             <label className="block text-[10px] font-mono uppercase tracking-widest text-[#474747] mb-2">
-              Security Key
+              Password
             </label>
             <input
               {...register('password')}
@@ -105,7 +105,7 @@ export default function RegisterForm() {
 
           <div>
             <label className="block text-[10px] font-mono uppercase tracking-widest text-[#474747] mb-2">
-              Verify Security Key
+              Confirm Password
             </label>
             <input
               {...register('confirmPassword')}
@@ -131,7 +131,7 @@ export default function RegisterForm() {
             ) : (
               <>
                 <UserPlus className="w-3 h-3" />
-                CONFIRM PROFILE
+                Signup
               </>
             )}
           </button>
@@ -151,7 +151,7 @@ export default function RegisterForm() {
             href="/"
             className="block text-center text-[#5e5e5e] hover:text-[#000000] transition-colors text-[10px] font-mono uppercase tracking-widest"
           >
-            Bypass Authentication
+           Continue as Guest
           </Link>
         </div>
       </div>
